@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '@prisma/client';
 import { Response } from 'express';
@@ -19,13 +27,7 @@ export class AuthController {
   ): Promise<JwtResponse> {
     const jwtResponse = await this.authService.signIn(authCredentialsDto);
 
-    response.cookie('token', jwtResponse.accessToken, {
-      maxAge: 1000 * 60 * 60 * 24 * 7 * 4 * 36,
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
-
+    this.setCookie(response, jwtResponse.accessToken);
     return jwtResponse;
   }
 
@@ -38,19 +40,39 @@ export class AuthController {
       googleCredentials
     );
 
-    response.cookie('token', jwtResponse.accessToken, {
-      maxAge: 1000 * 60 * 60 * 24 * 7 * 4 * 36,
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
-
+    this.setCookie(response, jwtResponse.accessToken);
     return jwtResponse;
+  }
+
+  @Post('/logout')
+  @UseGuards(AuthGuard())
+  async logout(
+    @GetUser() user: User,
+    @Res({ passthrough: true }) response: Response
+  ): Promise<void> {
+    if (!user.id) throw new UnauthorizedException();
+
+    this.clearCookie(response);
+    return;
   }
 
   @Get('/secret')
   @UseGuards(AuthGuard())
   async secret(@GetUser() user: User): Promise<string> {
     return user.email;
+  }
+
+  private setCookie(response: Response, token: string) {
+    response.cookie('token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7 * 4 * 36,
+      secure: true,
+    });
+  }
+
+  private clearCookie(response: Response) {
+    response.cookie('token', '', {
+      maxAge: 0,
+      secure: true,
+    });
   }
 }

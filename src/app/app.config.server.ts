@@ -11,7 +11,11 @@ const serverConfig: ApplicationConfig = {
     provideServerRendering(),
     {
       provide: LOCAL_STORAGE,
-      useValue: { getItem: () => null, removeItem: () => null, setItem: () => null },
+      useValue: {
+        getItem: () => null,
+        removeItem: () => null,
+        setItem: () => null,
+      },
     },
     {
       provide: NAVIGATOR,

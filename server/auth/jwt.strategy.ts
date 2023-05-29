@@ -13,11 +13,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: process.env['JWT_SECRET'],
       jwtFromRequest: (req: Request) => {
         if (req?.cookies?.token) {
-          console.log('COOKIES');
           return req.cookies.token;
         }
-
-        console.log('HEADERS');
 
         return req?.headers?.authorization?.split(' ')?.[1] || null;
       },

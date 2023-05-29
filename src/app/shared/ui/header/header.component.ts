@@ -8,7 +8,12 @@ import {
   signal,
 } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 
 import { Observable, map, switchMap } from 'rxjs';
 
@@ -58,9 +63,9 @@ const HEADER_VM = new InjectionToken<Observable<HeaderViewModel>>('HEADER_VM');
                 ...user,
                 lang: translate.getActiveLang(),
                 languages: translate.getAvailableLangs(),
-              })),
-            ),
-          ),
+              }))
+            )
+          )
         ),
       deps: [GlobalStore, TranslocoService],
     },
@@ -85,7 +90,7 @@ export class HeaderComponent {
   }
 
   onLogout(): void {
-    this.logout.emit();
     this.store.logout();
+    this.logout.emit();
   }
 }

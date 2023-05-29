@@ -1,14 +1,13 @@
 import { inject } from '@angular/core';
-import { environment } from '@environments/environment';
-import { LocalStorageService } from '@shared/services/local-storage.service';
 import { GlobalStore } from '@shared/store/global.store';
+import { CookieService } from 'ngx-cookie-service';
 
 export function jwtInitalizer(): () => void {
-  const localStorageService = inject(LocalStorageService);
+  const localStorageService = inject(CookieService);
   const store = inject(GlobalStore);
 
   return () => {
-    const accessToken = localStorageService.get<string>(environment.authKey);
+    const accessToken = localStorageService.get('token');
     store.setLoggedIn({ accessToken });
   };
 }

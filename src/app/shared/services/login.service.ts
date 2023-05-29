@@ -13,6 +13,13 @@ export class LoginService {
   private readonly http = inject(HttpClient);
 
   login({ provider, ...credentials }: Credentials): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.URL}/auth/${provider}`, credentials);
+    return this.http.post<AuthResponse>(
+      `${this.URL}/auth/${provider}`,
+      credentials
+    );
+  }
+
+  logout(): Observable<void> {
+    return this.http.post<void>(`${this.URL}/auth/logout`, {});
   }
 }

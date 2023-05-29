@@ -3,7 +3,6 @@ import { Component, inject, InjectionToken, OnInit } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
-import { GlobalStore } from 'src/app/shared/store/global.store';
 import { HeaderComponent } from 'src/app/shared/ui/header/header.component';
 import { HarvestFiltersComponent } from './components/harvest-filters/harvest-filters.component';
 import { HarvestStepModalComponent } from './components/harvest-filters/harvest-step-modal/harvest-step-modal.component';
@@ -65,7 +64,6 @@ export class HarvestComponent implements OnInit {
   protected readonly data$ = inject(HARVEST_DATA);
   protected readonly editable = inject(EDITABLE);
   private readonly route = inject(ActivatedRoute);
-  private readonly globalStore = inject(GlobalStore);
   private readonly harvestStore = inject(HarvestStore);
 
   ngOnInit(): void {
@@ -77,7 +75,6 @@ export class HarvestComponent implements OnInit {
   }
 
   onLogout(): void {
-    this.globalStore.logout();
     this.harvestStore.getData(this.route.snapshot.params['id']);
   }
 

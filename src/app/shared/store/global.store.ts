@@ -3,13 +3,12 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HotToastService } from '@ngneat/hot-toast';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
+import { CookieService } from 'ngx-cookie-service';
 import { switchMap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { GtmTrackingService } from '../../chore/services/gtm-tracking.service';
 import { LoginSuccessEvent } from '../../chore/tracking/gtm/login-success.event';
 import { Credentials } from '../models/credentials';
 import { User } from '../models/user';
-import { LocalStorageService } from '../services/local-storage.service';
 import { LoginService } from '../services/login.service';
 
 export interface GlobalState {
@@ -30,12 +29,11 @@ const DEFAULT_STATE: GlobalState = {
   providedIn: 'root',
 })
 export class GlobalStore extends ComponentStore<GlobalState> {
-  private readonly AUTH_KEY = environment.authKey;
   private readonly router = inject(Router);
   private readonly toast = inject(HotToastService);
   private readonly loginService = inject(LoginService);
   private readonly gtmTracking = inject(GtmTrackingService);
-  private readonly localStorageService = inject(LocalStorageService);
+  private readonly cookieService = inject(CookieService);
 
   constructor() {
     super({ ...DEFAULT_STATE, isLoggedIn: false });
@@ -58,28 +56,29 @@ export class GlobalStore extends ComponentStore<GlobalState> {
               this.toast.success('Bienvenido!');
               this.setLoggedIn(response);
             },
-            (error) => this.toast.error(String(error)),
-          ),
-        ),
-      ),
-    ),
+            (error) => this.toast.error(String(error))
+          )
+        )
+      )
+    )
   );
 
   readonly logout = this.updater((state) => {
-    this.localStorageService.remove(this.AUTH_KEY);
+    this.cookieService.delete('token');
 
     return { ...state, isLoggedIn: false, user: null };
   });
 
-  readonly setLoggedIn = this.updater((state, { accessToken }: AuthResponse) => {
-    this.localStorageService.set(this.AUTH_KEY, accessToken);
-    const helper = new JwtHelperService();
-    const user = helper.decodeToken(accessToken);
-    this.gtmTracking.setGlobalProperties({ user });
-    this.gtmTracking.track(new LoginSuccessEvent());
+  readonly setLoggedIn = this.updater(
+    (state, { accessToken }: AuthResponse) => {
+      const helper = new JwtHelperService();
+      const user = helper.decodeToken(accessToken);
+      this.gtmTracking.setGlobalProperties({ user });
+      this.gtmTracking.track(new LoginSuccessEvent());
 
-    return { ...state, isLoggedIn: !!accessToken, user };
-  });
+      return { ...state, isLoggedIn: !!accessToken, user };
+    }
+  );
 
   readonly setLoading = this.updater((state, loading: boolean) => ({
     ...state,
