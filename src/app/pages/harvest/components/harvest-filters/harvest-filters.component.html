@@ -1,0 +1,83 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <ng-container *transloco="let t">
+    <div class="chart-container" *ngIf="!isShared">
+      <app-chart *ngFor="let item of vm.statistics" [data]="item"></app-chart>
+    </div>
+
+    <div class="user-info" *ngIf="isShared && vm.user">
+      <div class="grid">
+        <div class="cell">
+          <span class="material-symbols-outlined" style="font-size: 4rem">
+            sports_esports
+          </span>
+        </div>
+
+        <div class="cell cursor" (click)="copyToClipboard(vm.user.nickname)">
+          <small>Name</small>
+          <h3>{{ vm.user.nickname }}</h3>
+        </div>
+
+        <div class="cell">
+          <small>Discord Id</small>
+          <h3>{{ vm.user.discord || '' }}</h3>
+        </div>
+
+        <div class="cell">
+          <small>Server</small>
+          <h3>{{ vm.user.server }}</h3>
+        </div>
+
+        <app-button (click)="onBack()">{{ t('home.back') }}</app-button>
+      </div>
+    </div>
+
+    <form [formGroup]="form">
+      <div class="search-box">
+        <app-input
+          type="text"
+          [control]="search"
+          [placeholder]="t('home.search')"
+          style="flex-basis: 500px"
+        >
+        </app-input>
+
+        <app-button (click)="onClearFilters()">{{ t('home.reset') }}</app-button>
+
+        <app-button *ngIf="!isShared" (click)="onShareHarvest(vm.harvestId)">{{
+          t('home.share')
+        }}</app-button>
+
+        <app-button *ngIf="!isShared" (click)="onStepCompleted(vm.steps)">{{
+          t('home.complete')
+        }}</app-button>
+      </div>
+
+      <div class="controls-box">
+        <div class="control">
+          <input type="checkbox" formControlName="showCaptured" id="completed" />
+          <label for="completed">{{ t('home.captured') }}</label>
+        </div>
+
+        <div class="control">
+          <input type="checkbox" formControlName="showRepeatedOnly" id="repeated" />
+          <label for="repeated">{{ t('home.repeated') }}</label>
+        </div>
+
+        <div class="control">
+          <input type="checkbox" formControlName="monsters" id="monsters" />
+          <label for="monsters">{{ t('home.monsters') }}</label>
+        </div>
+
+        <div class="control">
+          <input type="checkbox" formControlName="bosses" id="bosses" />
+          <label for="bosses">{{ t('home.bosses') }}</label>
+        </div>
+
+        <div class="control">
+          <input type="checkbox" formControlName="archis" id="archis" />
+          <label for="archis">{{ t('home.archis') }}</label>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</ng-container>

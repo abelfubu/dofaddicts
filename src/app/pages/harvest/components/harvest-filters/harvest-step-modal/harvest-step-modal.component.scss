@@ -1,0 +1,30 @@
+@use "colors" as colors;
+
+:host {
+  display: block;
+  padding: 2rem;
+  accent-color: map-get($map: colors.$primary, $key: 500);
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+  form {
+    display: grid;
+    grid-template-rows: repeat(9, 1fr);
+    column-gap: 2rem;
+    row-gap: 1rem;
+    grid-auto-flow: column;
+  }
+
+  label {
+    margin-left: 0.5rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 2rem;
+    justify-content: left;
+  }
+}

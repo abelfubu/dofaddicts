@@ -1,0 +1,9 @@
+$radius: 0.4rem;
+
+@function border-shadow($color) {
+  @return 0 0 0 1px $color;
+}
+
+@function border-shadow-hover($color) {
+  @return 0 0 0 2px $color;
+}

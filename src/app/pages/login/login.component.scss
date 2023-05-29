@@ -1,0 +1,46 @@
+@use "colors" as c;
+
+:host {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.image {
+  background-image: url("../../../assets/img/login.jpg");
+  background-position: center;
+  background-size: cover;
+  opacity: 0.7;
+  mix-blend-mode: difference;
+}
+
+img {
+  width: 4rem;
+}
+
+main {
+  padding: 0 2rem;
+  display: grid;
+  place-content: center;
+}
+
+h1 {
+  margin: 1rem 0;
+}
+
+p {
+  display: inline;
+  text-align: center;
+  transform: translateY(2.7rem);
+}
+
+hr {
+  border-color: map-get($map: c.$dark, $key: 300);
+  margin: 2rem 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}

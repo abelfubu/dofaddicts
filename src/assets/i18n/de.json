@@ -1,0 +1,53 @@
+{
+  "header": {
+    "exchange": "Austausch",
+    "my harvest": "Meine Ernte"
+  },
+  "home": {
+    "monsters": "Scheusale",
+    "bosses": "Köpfe",
+    "archis": "Archis",
+    "total": "Gesamt",
+    "search": "Finden...",
+    "reset": "Filter löschen",
+    "share": "Freigeben",
+    "back": "Rückgabe",
+    "complete": "Vollständig",
+    "captured": "Aufnahmen Anzeigen",
+    "repeated": "Nur Wiederholungen anzeigen",
+    "table": {
+      "name": "Zahl",
+      "level": "Niveau",
+      "subzone": "Unterzone",
+      "zone": "Zone",
+      "step": "Bühne",
+      "captured": "Eingefangen",
+      "repeated": "Wiederholt"
+    }
+  },
+  "profile": {
+    "gameNick": "Dofus Name",
+    "server": "Server",
+    "back": "Zurück",
+    "submit": "Senden"
+  },
+  "exchange": {
+    "monsters": "Scheusale",
+    "bosses": "Köpfe",
+    "archis": "Archis",
+    "name": "Name",
+    "title": "Spieler in {{ server }}",
+    "error": {
+      "title": "Aktualisieren Sie zuerst Ihr Profil",
+      "message": "Um mit anderen Benutzern kommunizieren zu können, müssen Sie zuerst Ihr Profil mit Ihren Spiel- und Serverinformationen aktualisieren.",
+      "button": "Profil bearbeiten",
+      "back": "Zurück"
+    }
+  },
+  "footer": {
+    "title": "Vielen Dank für die Nutzung von Dofaddicts!",
+    "text": "Wir schätzen deine Hilfe bei der Verbesserung von Übersetzungen und freuen uns über jede Idee, die du haben könntest. Kontaktiere uns, wenn du dazu beitragen möchtest, unseren Inhalt für alle Benutzer zu verbessern.",
+    "button": "Sag Hallo",
+    "bottom": "Mit ❤️  von Dofaddicts erstellt"
+  }
+}

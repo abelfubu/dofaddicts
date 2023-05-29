@@ -1,0 +1,19 @@
+<!-- <img src="./assets/img/login.jpg" alt=""> -->
+<div class="image"></div>
+<main>
+  <a [routerLink]="['/']">
+    <img src="./assets/img/logo.png" alt="Logo">
+
+  </a>
+  <h1>Log In</h1>
+  <div #googleButton class="google-button"></div>
+  <p>Or</p>
+  <hr>
+  <form [formGroup]="form" (ngSubmit)="onLoginSubmit()">
+    <app-input [control]="form.controls.email" type="email" placeholder="example@email.com">
+    </app-input>
+    <app-input [control]="form.controls.password" type="password">
+    </app-input>
+    <app-button class="margin-top" role="button">Sign In</app-button>
+  </form>
+</main>

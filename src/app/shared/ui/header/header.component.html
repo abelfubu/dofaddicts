@@ -1,0 +1,98 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <header *transloco="let t">
+    <nav>
+      <div [routerLink]="['/']" class="logo-container">
+        <img class="logo" src="./assets/img/logo.png" alt="Logo" />
+        <h3>Dofaddicts</h3>
+      </div>
+
+      <a
+        [routerLink]="['/', vm.lang]"
+        [routerLinkActive]="'active'"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >{{ t('header.harvest') }}</a
+      >
+      <a
+        *ngIf="vm.isLoggedIn"
+        [routerLink]="['/', vm.lang, 'exchange']"
+        [routerLinkActive]="'active'"
+        >{{ t('header.exchange') }}</a
+      >
+    </nav>
+    <nav>
+      <ng-container *ngIf="vm.email">
+        <img
+          [mat-menu-trigger-for]="profile"
+          class="avatar"
+          [title]="vm.email"
+          *ngIf="vm.picture; else emailAvatar"
+          [src]="vm.picture"
+          alt="User Picture"
+        />
+        <ng-template #emailAvatar>
+          <div class="email-avatar" [mat-menu-trigger-for]="profile">
+            {{ vm.email.at(0) }}
+          </div>
+        </ng-template>
+      </ng-container>
+      <mat-menu #profile="matMenu">
+        <button mat-menu-item (click)="onLogout()">
+          <div class="language-flag">
+            <span class="material-symbols-outlined">logout</span>
+            Log Out
+          </div>
+        </button>
+        <button mat-menu-item>
+          <div class="language-flag" [routerLink]="['/', vm.lang, 'profile']">
+            <span class="material-symbols-outlined">settings</span>
+            Profile
+          </div>
+        </button>
+      </mat-menu>
+
+      <app-button
+        *ngIf="!vm.isLoggedIn"
+        [routerLink]="['/login']"
+        [queryParams]="{ from: 'harvest' }"
+      >
+        Log In
+      </app-button>
+
+      <app-button [matMenuTriggerFor]="menu">
+        <div class="language-flag">
+          <img
+            src="./assets/flags/{{ selectedLanguage() }}.png"
+            alt="Language Flag"
+            width="24"
+            height="24"
+          />
+          {{ selectedLanguage() | uppercase }}
+        </div>
+      </app-button>
+      <mat-menu #menu="matMenu">
+        <button
+          *ngFor="let language of vm.languages"
+          mat-menu-item
+          (click)="onLangChange(language)"
+        >
+          <div class="language-flag">
+            <img
+              src="./assets/flags/{{ language }}.png"
+              alt="Language Flag"
+              width="24"
+              height="24"
+            />
+            {{ language | uppercase }}
+          </div>
+        </button>
+      </mat-menu>
+      <app-buy-me-coffee />
+    </nav>
+  </header>
+  <mat-progress-bar
+    style="position: fixed; top: 0; left: 0"
+    *ngIf="store.loading$ | async"
+    mode="indeterminate"
+    [color]="'accent'"
+  ></mat-progress-bar>
+</ng-container>

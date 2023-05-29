@@ -1,0 +1,66 @@
+@use 'colors' as c;
+
+header {
+  display: flex;
+  padding: 1rem 0;
+  margin: auto;
+  justify-content: space-between;
+  align-items: center;
+
+  .logo {
+    width: 2rem;
+  }
+
+  h3 {
+    flex: 1 0 0;
+    margin-left: 0.3rem;
+    font-family: 'Delicious Handrawn', cursive;
+    font-size: 2rem;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-right: 0.5rem;
+    }
+
+    .active {
+      color: map-get($map: c.$primary, $key: 400);
+    }
+
+    a {
+      text-decoration: none;
+      color: c.$light;
+      transition: color 200ms;
+
+      &:hover {
+        color: map-get($map: c.$primary, $key: 400);
+      }
+    }
+
+    .avatar {
+      border-radius: 50%;
+      width: 2rem;
+      height: 2rem;
+      cursor: pointer;
+    }
+
+    .email-avatar {
+      display: grid;
+      text-transform: uppercase;
+      background-color: map-get($map: c.$primary, $key: 500);
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      place-content: center;
+      color: map-get($map: c.$dark, $key: 400);
+      cursor: pointer;
+    }
+  }
+}

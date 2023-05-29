@@ -1,0 +1,56 @@
+@use 'colors' as colors;
+@use 'common' as common;
+
+$primary: map-get(
+  $map: colors.$dark,
+  $key: 300,
+);
+
+$accent: map-get(
+  $map: colors.$primary,
+  $key: 400,
+);
+
+button {
+  color: map-get($map: colors.$dark, $key: 100);
+  padding: 0.4rem 0.7rem;
+  border: none;
+  font-size: 1.1rem;
+  outline: none;
+  background-color: transparent;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.1rem;
+  align-items: center;
+  border-radius: common.$radius;
+  box-shadow: common.border-shadow($primary);
+  transition: box-shadow 200ms ease-in-out;
+
+  &:not([disabled]) {
+    cursor: pointer;
+  }
+
+  &:hover {
+    box-shadow: common.border-shadow-hover($primary);
+  }
+
+  &:active:not([disabled]) {
+    filter: brightness(0.8);
+  }
+
+  &:disabled {
+    box-shadow: none;
+  }
+
+  &.accent {
+    box-shadow: 0 0 0 1px $accent;
+    &:hover {
+      box-shadow: 0 0 0 2px $accent;
+    }
+  }
+}
+
+span {
+  transform: scale(1.1);
+  margin-left: -0.5rem;
+}

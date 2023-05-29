@@ -1,0 +1,14 @@
+<app-harvest-table-header></app-harvest-table-header>
+<ng-container *ngIf="data?.length">
+  <div
+    infiniteScroll
+    [infiniteScrollDistance]="3"
+    [infiniteScrollThrottle]="400"
+    (scrolled)="scrolled.emit()"
+  >
+    <app-harvest-item
+      *ngFor="let item of data; let index = index; trackBy: trackByFn"
+      [item]="item"
+    ></app-harvest-item>
+  </div>
+</ng-container>

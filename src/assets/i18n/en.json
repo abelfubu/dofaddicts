@@ -1,0 +1,53 @@
+{
+  "header": {
+    "exchange": "Exchange",
+    "harvest": "My harvest"
+  },
+  "home": {
+    "monsters": "Monsters",
+    "bosses": "Bosses",
+    "archis": "Archis",
+    "total": "Total",
+    "search": "Search...",
+    "reset": "Reset Filters",
+    "share": "Share",
+    "back": "Back",
+    "complete": "Complete",
+    "captured": "Show Captured",
+    "repeated": "Show only repetated",
+    "table": {
+      "name": "Name",
+      "level": "Level",
+      "subzone": "Subzone",
+      "zone": "Zone",
+      "step": "Step",
+      "captured": "Captured",
+      "repeated": "Repeated"
+    }
+  },
+  "profile": {
+    "gameNick": "Dofus Name",
+    "server": "Server",
+    "back": "Back",
+    "submit": "Submit"
+  },
+  "exchange": {
+    "monsters": "Monsters",
+    "bosses": "Bosses",
+    "archis": "Archis",
+    "name": "Name",
+    "title": "Players in {{ server }}",
+    "error": {
+      "title": "Update your profile first",
+      "message": "In order to be able to exchange with other users you need first to update your profile with your game and server info.",
+      "button": "Edit Profile",
+      "back": "Back"
+    }
+  },
+  "footer": {
+    "title": "Thanks for using Dofaddicts!",
+    "text": "We value your help in improving translations and appreciate any ideas you may have. Contact me if you want to contribute for making our content better for all users.",
+    "button": "Say Hello",
+    "bottom": "Made with ❤️  by Dofaddicts"
+  }
+}

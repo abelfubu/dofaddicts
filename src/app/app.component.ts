@@ -1,14 +1,18 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { GoogleAuthDirective } from './shared/google-auth.directive';
+import { FooterComponent } from './shared/ui/footer/footer.component';
+import { ScrollUpComponent } from './shared/ui/scroll-up/scroll-up.component';
 
 @Component({
-  selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-root',
+  imports: [GoogleAuthDirective, RouterOutlet, FooterComponent, ScrollUpComponent],
+  template: `
+    <app-google-auth></app-google-auth>
+    <router-outlet></router-outlet>
+    <app-footer></app-footer>
+    <app-scroll-up />
+  `,
 })
-export class AppComponent {
-  title = 'dofaddicts';
-}
+export class AppComponent {}

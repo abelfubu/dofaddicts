@@ -1,0 +1,77 @@
+@use 'colors' as colors;
+
+:host {
+  display: grid;
+  grid-template-columns: 0.6fr 0.7fr 0.6fr 1fr repeat(3, 0.6fr);
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  .green {
+    color: #fff;
+    background-color: colors.$green;
+  }
+
+  .red {
+    color: #fff;
+    background-color: colors.$red;
+  }
+
+  .warn {
+    background-color: colors.$warn;
+  }
+
+  &:nth-child(odd) {
+    background-color: #0001;
+  }
+
+  img {
+    padding: 0.8rem;
+    height: 7rem;
+    margin: auto;
+  }
+
+  .cell {
+    display: grid;
+    align-items: center;
+  }
+
+  .center {
+    text-align: center;
+    place-content: center;
+  }
+
+  button {
+    background-color: transparent;
+    color: transparent;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    border: none;
+    margin: 0.5rem 0;
+    transition: box-shadow ease 200ms;
+  }
+
+  &:hover {
+    button[disabled] {
+      color: transparent;
+    }
+
+    button:not([disabled]) {
+      color: white;
+
+      &:hover {
+        box-shadow: 0 0 0 1px colors.$light-blue;
+      }
+
+      &:active {
+        box-shadow: 0 0 0 1px colors.$medium-blue;
+      }
+    }
+  }
+
+  .not-selectable {
+    user-select: none;
+  }
+}

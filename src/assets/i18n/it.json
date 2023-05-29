@@ -1,0 +1,53 @@
+{
+  "header": {
+    "exchange": "Scambio",
+    "harvest": "Il mio raccolto"
+  },
+  "home": {
+    "monsters": "Mostri",
+    "bosses": "Boss",
+    "archis": "Archis",
+    "total": "Totale",
+    "search": "Cerca...",
+    "reset": "Resetta Filtri",
+    "share": "Condividi",
+    "back": "Indietro",
+    "complete": "Completa",
+    "captured": "Mostra Catturati",
+    "repeated": "Mostra solo Ripetuti",
+    "table": {
+      "name": "Nome",
+      "level": "Livello",
+      "subzone": "Sottozona",
+      "zone": "Zona",
+      "step": "Passo",
+      "captured": "Catturato",
+      "repeated": "Ripetuto"
+    }
+  },
+  "profile": {
+    "gameNick": "Nome di Dofus",
+    "server": "Server",
+    "back": "Indietro",
+    "submit": "Invia"
+  },
+  "exchange": {
+    "monsters": "Mostri",
+    "bosses": "Boss",
+    "archis": "Archis",
+    "name": "Nome",
+    "title": "Giocatori in {{ server }}",
+    "error": {
+      "title": "Aggiorna il tuo profilo prima",
+      "message": "Per poter scambiare con altri utenti, devi prima aggiornare il tuo profilo con le informazioni del tuo gioco e del server.",
+      "button": "Modifica profilo",
+      "back": "Indietro"
+    }
+  },
+  "footer": {
+    "title": "Grazie per utilizzare Dofaddicts!",
+    "text": "Apprezziamo il tuo aiuto nel migliorare le traduzioni e qualsiasi idea tu possa avere. Contattaci se desideri contribuire a rendere il nostro contenuto migliore per tutti gli utenti.",
+    "button": "Di ciao",
+    "bottom": "Realizzato con ❤️  da Dofaddicts"
+  }
+}

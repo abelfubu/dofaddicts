@@ -1,0 +1,53 @@
+{
+  "header": {
+    "exchange": "Échanger",
+    "harvest": "Ma récolte"
+  },
+  "home": {
+    "monsters": "Monstres",
+    "bosses": "Face",
+    "archis": "Archis",
+    "total": "Total",
+    "search": "Rechercher...",
+    "reset": "Réinitialiser les filtres",
+    "share": "Partager",
+    "back": "Retour",
+    "complete": "complet",
+    "captured": "Spectacle capturé",
+    "repeated": "Afficher seulement Répété",
+    "table": {
+      "name": "Nom",
+      "level": "Niveau",
+      "subzone": "Sous-zone",
+      "zone": "Zone",
+      "step": "Étape",
+      "captured": "Capturé",
+      "repeated": "Répété"
+    }
+  },
+  "profile": {
+    "gameNick": "Nom de Dofus",
+    "server": "Serveur",
+    "back": "Retour",
+    "submit": "Envoyer"
+  },
+  "exchange": {
+    "monsters": "Monstres",
+    "bosses": "Face",
+    "archis": "Archis",
+    "name": "Nom",
+    "title": "Joueurs en {{ server }}",
+    "error": {
+      "title": "Mettez à jour votre profil d'abord",
+      "message": "Pour pouvoir échanger avec d'autres utilisateurs, vous devez d'abord mettre à jour votre profil avec vos informations de jeu et de serveur.",
+      "button": "Modifier le profil",
+      "back": "Retour"
+    }
+  },
+  "footer": {
+    "title": "Merci d'utiliser Dofaddicts !",
+    "text": "Nous apprécions votre aide pour améliorer les traductions et toute idée que vous pourriez avoir. Contactez-nous si vous souhaitez contribuer à améliorer notre contenu pour tous les utilisateurs.",
+    "button": "Dites bonjour",
+    "bottom": "Créé avec ❤️  par Dofaddicts"
+  }
+}

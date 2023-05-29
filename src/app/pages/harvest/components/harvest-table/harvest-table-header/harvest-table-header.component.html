@@ -1,0 +1,19 @@
+<div class="header-container" *ngIf="steps$ | async as steps">
+  <div *ngFor="let header of headers" class="table-header">
+    <ng-container [ngSwitch]="header.type" *transloco="let t">
+      <div *ngSwitchCase="'space'"></div>
+      <app-button *ngSwitchCase="'text'" [disabled]="true" [center]="true">{{
+        t(header.label)
+      }}</app-button>
+      <app-button
+        [accent]="steps.includes(false)"
+        *ngSwitchCase="'filter'"
+        icon="expand_more"
+        [center]="true"
+        (click)="openFilter(header.component!, steps)"
+      >
+        {{ t(header.label) }}
+      </app-button>
+    </ng-container>
+  </div>
+</div>

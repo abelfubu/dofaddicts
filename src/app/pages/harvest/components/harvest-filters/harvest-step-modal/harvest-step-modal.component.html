@@ -1,0 +1,14 @@
+<h2>Etapas</h2>
+<form [formGroup]="form">
+  <div *ngFor="let step of steps; let index = index">
+    <input type="checkbox" [formControlName]="index + 1" [id]="'etapa-' + (index + 1)" />
+    <label [for]="'etapa-' + (index + 1)">{{ 'Etapa ' + (index + 1) }}</label>
+  </div>
+</form>
+
+<div class="actions">
+  <app-button (click)="setAllControls(steps, true)">Marcar todas</app-button>
+  <app-button (click)="setAllControls(steps, false)">Desmarcar todas</app-button>
+  <app-button (click)="applySteps()">Aplicar</app-button>
+  <app-button (click)="closeModal()">Cancelar</app-button>
+</div>

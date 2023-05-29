@@ -1,0 +1,66 @@
+@use 'colors' as colors;
+
+:host {
+  display: block;
+
+  .cursor {
+    cursor: pointer;
+  }
+
+  .user-info {
+    text-align: center;
+    box-shadow: 0 0 0 1px map-get(colors.$dark, 300);
+    border-radius: 0.4rem;
+    padding: 0.5rem;
+    margin: 2rem auto;
+    width: 100%;
+    max-width: 750px;
+
+    .grid {
+      display: grid;
+      grid-template-columns: 0.5fr repeat(3, 1fr) 0.5fr;
+      align-items: center;
+    }
+  }
+
+  .chart-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 3rem;
+    max-width: 900px;
+    margin: 2rem auto 0;
+  }
+
+  .search-box {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .controls-box {
+    padding: 0.5rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+
+    label {
+      margin-left: 0.5rem;
+    }
+  }
+
+  .search {
+    padding: 0.3rem 0.7rem;
+    border-radius: 0.3rem;
+    border: none;
+    box-shadow: 0 0 0 1px grey;
+    font-size: 1.5rem;
+    outline: none;
+    width: 500px;
+    margin: 0 auto;
+
+    &:focus {
+      box-shadow: 0 0 0 2px grey;
+    }
+  }
+}
