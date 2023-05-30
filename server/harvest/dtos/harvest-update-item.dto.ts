@@ -12,4 +12,7 @@ export class HarvestUpdateItemDto {
 
   @IsNumber()
   amount!: number;
+
+  @IsNumber()
+  type!: number;
 }

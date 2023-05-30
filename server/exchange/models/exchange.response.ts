@@ -1,7 +1,7 @@
-import { HarvestItem } from '@prisma/client';
+import { Harvest } from '@prisma/client';
 
 export interface ExchangeResponse {
-  picture: string;
+  picture: string | null;
   nickname: string;
   discord: string;
   server: string;
@@ -9,8 +9,7 @@ export interface ExchangeResponse {
   harvest: ExchangeHarvest;
 }
 
-export interface ExchangeHarvest {
-  0: HarvestItem[];
-  1: HarvestItem[];
-  2: HarvestItem[];
-}
+export type ExchangeHarvest = {
+  his: Record<number, Harvest[]>;
+  mine: Record<number, Harvest[]>;
+};

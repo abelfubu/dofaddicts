@@ -17,28 +17,34 @@
 </div>
 
 <div
-  [ngClass]="item.captured ? 'green' : 'red'"
   [ngStyle]="{ 'pointer-events': !editable && 'none' }"
-  class="cell center pointer not-selectable"
-  (click)="onCapturedChange(item)"
+  class="cell center not-selectable"
 >
-  <span class="material-symbols-outlined">
-    {{ item.captured ? 'check' : 'close' }}
-  </span>
+  <div
+    (click)="onCapturedChange(item)"
+    [ngClass]="item.captured ? 'green' : 'red'"
+    class="pointer pill"
+  >
+    <span class="material-symbols-outlined">
+      {{ item.captured ? "check" : "close" }}
+    </span>
+  </div>
 </div>
 
 <div
-  [class.warn]="!!item.amount"
   class="cell center not-selectable"
   [ngStyle]="{ 'pointer-events': !editable && 'none' }"
 >
   <button
-    [disabled]="!editable"
+    [disabled]="!item.captured || !editable"
     (click)="onAmountChange(item, item.amount ? item.amount + 1 : 1)"
   >
     <span class="material-symbols-outlined"> arrow_drop_up </span>
   </button>
-  <p>{{ item.amount ?? '0' }}</p>
+
+  <div [class.warn]="!!item.amount" class="pill">
+    <p>{{ item.amount ?? "0" }}</p>
+  </div>
   <button
     [disabled]="!item.amount || !editable"
     (click)="onAmountChange(item, item.amount! - 1)"

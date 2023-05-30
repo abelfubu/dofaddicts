@@ -7,8 +7,7 @@ export interface ExchangeResponse {
   userHarvestId: string;
   server: string;
   harvest: {
-    0: Harvest[];
-    1: Harvest[];
-    2: Harvest[];
+    his: Record<number, Harvest[]>;
+    mine: Record<number, Harvest[]>;
   };
 }

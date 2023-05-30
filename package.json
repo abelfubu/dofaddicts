@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:stats": "ng build --stats-json",
+    "analyze": "webpack-bundle-analyzer dist/dofaddicts/browser/stats.json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "dev:ssr": "ng run dofaddicts:serve-ssr",
@@ -74,6 +76,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "prisma": "^4.14.1",
-    "typescript": "~5.0.2"
+    "typescript": "~5.0.2",
+    "webpack-bundle-analyzer": "^4.8.0"
   }
 }

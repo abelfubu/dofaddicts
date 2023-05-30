@@ -22,7 +22,7 @@ export class AuthController {
 
   @Post('/email')
   async signInWithEmail(
-    @Res() response: Response,
+    @Res({ passthrough: true }) response: Response,
     @Body() authCredentialsDto: AuthCredentialsDto
   ): Promise<JwtResponse> {
     const jwtResponse = await this.authService.signIn(authCredentialsDto);

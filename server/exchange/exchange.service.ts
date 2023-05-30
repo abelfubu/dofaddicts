@@ -11,24 +11,78 @@ import { ExchangeResponse } from './models/exchange.response';
 export class ExchangeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async get({ id, serverId }: User): Promise<ExchangeResponse[]> {
-    if (!id) throw new UnauthorizedException();
+  async get(user: User): Promise<ExchangeResponse[]> {
+    if (!user.id) throw new UnauthorizedException();
 
-    if (!serverId) throw new BadRequestException();
+    if (!user.serverId) throw new BadRequestException();
 
-    const missing = await this.prisma.harvestItem.findMany({
+    const querys = [
+      this.prisma.harvestItem.findMany(
+        this.getExchangeQuery(user.id, { captured: true })
+      ),
+      this.prisma.harvestItem.findMany(
+        this.getExchangeQuery(user.id, { amount: { gt: 0 } })
+      ),
+    ];
+
+    const [missing, repeated] = await Promise.all(querys);
+
+    const [fromUsers, fromMe] = await Promise.all([
+      this.getAvailableItems(
+        user,
+        {
+          amount: { gt: 0 },
+          AND: {
+            harvestId: { notIn: missing.map((x) => x.harvestId) },
+          },
+        },
+        'his'
+      ),
+      this.getAvailableItems(
+        user,
+        {
+          captured: false,
+          AND: {
+            harvestId: { in: repeated.map((x) => x.harvestId) },
+          },
+        },
+        'mine'
+      ),
+    ]);
+
+    // @ts-ignore
+    return fromUsers.map((user) => {
+      const found = fromMe.find((x) => x.userHarvestId === user.userHarvestId);
+      return found
+        ? {
+            ...user,
+            harvest: {
+              his: user.harvest['his'],
+              mine: found.harvest['mine'],
+            },
+          }
+        : user;
+    });
+  }
+
+  private getExchangeQuery(id: string, AND: Record<string, unknown>) {
+    return {
       where: {
         userHarvest: { user: { id } },
-        AND: {
-          captured: true,
-        },
+        AND,
       },
       select: {
         harvestId: true,
       },
-    });
+    };
+  }
 
-    const exchange = await this.prisma.user.findMany({
+  private async getAvailableItems(
+    { id, serverId }: User,
+    where: Record<string, unknown>,
+    key: 'his' | 'mine'
+  ) {
+    const result = await this.prisma.user.findMany({
       orderBy: {
         activeAt: 'desc',
       },
@@ -52,37 +106,29 @@ export class ExchangeService {
               select: {
                 harvest: true,
               },
-              where: {
-                amount: { gt: 0 },
-                AND: {
-                  harvestId: { notIn: missing.map((x) => x.harvestId) },
-                },
-              },
+              where,
             },
           },
         },
       },
     });
 
-    // @ts-ignore
-    return exchange.map((user) => ({
-      picture: user.picture,
-      nickname: user.nickname,
-      discord: user.discord,
-      userHarvestId: user.userHarvestId,
-      server: user?.server?.name,
-      harvestId: user.harvest,
-      harvest: user.harvest.harvest.reduce<Record<number, Harvest[]>>(
-        (acc, user) => {
-          acc[user.harvest.type].push(user.harvest);
-          return acc;
-        },
-        {
-          0: [],
-          1: [],
-          2: [],
-        }
-      ),
+    return result.map((user) => ({
+      ...user,
+      server: user?.server?.name!,
+      harvest: {
+        [key]: user.harvest.harvest.reduce<Record<number, Harvest[]>>(
+          (acc, user) => {
+            acc[user.harvest.type].push(user.harvest);
+            return acc;
+          },
+          {
+            0: [],
+            1: [],
+            2: [],
+          }
+        ),
+      },
     }));
   }
 }

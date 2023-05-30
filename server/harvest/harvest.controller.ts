@@ -4,6 +4,7 @@ import { User } from '@prisma/client';
 import { GetUser } from '../auth/get-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CompletedStepsPipe } from '../harvest/pipes/completed-step.pipe';
+import { UserWithProgress } from '../user/models/user-with-progress.model';
 import { HarvestUpdateItemDto } from './dtos/harvest-update-item.dto';
 import { HarvestService } from './harvest.service';
 import { HarvestResponse } from './models/harvest-response';
@@ -33,7 +34,7 @@ export class HarvestController {
   @Post()
   @UseGuards(JwtAuthGuard)
   update(
-    @GetUser() user: User,
+    @GetUser() user: UserWithProgress,
     @Body() harvestUpdateItemDto: HarvestUpdateItemDto
   ): Promise<void> {
     return this.harvestService.update(harvestUpdateItemDto, user);
@@ -42,7 +43,7 @@ export class HarvestController {
   @Post('complete')
   @UseGuards(JwtAuthGuard)
   completeSteps(
-    @GetUser() user: User,
+    @GetUser() user: UserWithProgress,
     @Body(CompletedStepsPipe)
     harvestCompleteStepsDto: number[]
   ): Promise<HarvestResponse> {

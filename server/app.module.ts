@@ -6,15 +6,15 @@ import { AuthModule } from './auth/auth.module';
 import { ExchangeModule } from './exchange/exchange.module';
 import { HarvestModule } from './harvest/harvest.module';
 import { ProfileModule } from './profile/profile.module';
-import { TestModule } from './test/test.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    TestModule,
+    UserModule,
     AuthModule,
-    ExchangeModule,
     HarvestModule,
     ProfileModule,
+    ExchangeModule,
     AngularUniversalModule.forRoot({
       bootstrap: AppServerModule,
       viewsPath: join(process.cwd(), 'dist/dofaddicts/browser'),

@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { compare, genSalt, hash } from 'bcryptjs';
@@ -10,6 +14,8 @@ import { GoogleCredentialsDto } from './models/google-credentials.dto';
 import { JwtPayload } from './models/jwt-payload';
 import { JwtResponse } from './models/jwt-response';
 import { LoginProvider } from './models/login-provider';
+
+const ARCHIES_IDS: string[] = [];
 
 @Injectable()
 export class AuthService {
@@ -29,21 +35,47 @@ export class AuthService {
     picture?: string;
     provider: LoginProvider;
   }): Promise<JwtResponse> {
-    await this.prisma.user.create({
-      data: {
-        email,
-        password: password ? await this.hashPassword(password) : 'google',
-        harvest: { create: { name: 'default' } },
-        ...(picture && { picture }),
-      },
-    });
+    if (!ARCHIES_IDS.length) {
+      const harvest = await this.prisma.harvest.findMany({
+        where: { type: 2 },
+        select: { id: true },
+      });
 
-    return this.generateAccessToken({
-      email,
-      picture,
-      provider,
-      nickname: null!,
-    });
+      ARCHIES_IDS.push(...harvest.map((x) => x.id));
+    }
+
+    try {
+      const user = await this.prisma.user.create({
+        data: {
+          email,
+          password: password ? await this.hashPassword(password) : 'google',
+          harvest: { create: { name: 'default' } },
+          ...(picture && { picture }),
+          userProgress: { create: { missingOrExchangeable: { create: [] } } },
+        },
+        include: { userProgress: { select: { id: true } } },
+      });
+
+      console.log('USER', user);
+
+      await this.prisma.harvestItem.createMany({
+        data: ARCHIES_IDS.map((id) => ({
+          harvestId: id,
+          userHarvestId: user.userHarvestId,
+          userProgressId: user?.userProgress?.id,
+        })),
+      });
+
+      return this.generateAccessToken({
+        email,
+        picture,
+        provider,
+        nickname: null!,
+      });
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async signInWithGoogle({

@@ -1,24 +1,26 @@
-@use 'colors' as colors;
+@use "colors" as colors;
 
 :host {
   display: grid;
   grid-template-columns: 0.6fr 0.7fr 0.6fr 1fr repeat(3, 0.6fr);
+  $dark: map-get(colors.$dark, 400);
 
   .pointer {
     cursor: pointer;
   }
 
   .green {
-    color: #fff;
+    color: $dark;
     background-color: colors.$green;
   }
 
   .red {
-    color: #fff;
+    color: $dark;
     background-color: colors.$red;
   }
 
   .warn {
+    color: $dark;
     background-color: colors.$warn;
   }
 
@@ -37,9 +39,18 @@
     align-items: center;
   }
 
+  .pill {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: grid;
+    place-content: center;
+  }
+
   .center {
     text-align: center;
     place-content: center;
+    place-items: center;
   }
 
   button {

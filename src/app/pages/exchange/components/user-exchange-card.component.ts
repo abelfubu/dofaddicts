@@ -19,7 +19,9 @@ import { ExchangeResponse } from '../models/exchange.response';
           <h3>{{ user.nickname }}</h3>
         </div>
         <app-button (click)="$event.stopPropagation(); copyToClipboard()"
-          ><span class="material-symbols-outlined"> content_copy </span></app-button
+          ><span class="material-symbols-outlined">
+            content_copy
+          </span></app-button
         >
       </div>
       <div class="cell">
@@ -38,7 +40,7 @@ import { ExchangeResponse } from '../models/exchange.response';
           <div class="title">
             <small>Monsters</small>
           </div>
-          <h3>{{ user.harvest[0].length }}</h3>
+          <h3>{{ user.harvest.his[0].length }}</h3>
         </div>
 
         <div
@@ -49,7 +51,7 @@ import { ExchangeResponse } from '../models/exchange.response';
           <div class="title">
             <small>Bosses</small>
           </div>
-          <h3>{{ user.harvest[1].length }}</h3>
+          <h3>{{ user.harvest.his[1].length }}</h3>
         </div>
 
         <div
@@ -60,7 +62,7 @@ import { ExchangeResponse } from '../models/exchange.response';
           <div class="title">
             <small>Archis</small>
           </div>
-          <h3>{{ user.harvest[2].length }}</h3>
+          <h3>{{ user.harvest.his[2].length }}</h3>
         </div>
       </div>
     </div>
@@ -143,7 +145,7 @@ export class UserExchangeCardComponent {
           loading: 'Copiando url en el portapapeles',
           success: 'Comando copiado en el portapapeles',
           error: 'Algo ha ido mal, intentalo más tarde',
-        }),
+        })
       )
       .subscribe();
   }

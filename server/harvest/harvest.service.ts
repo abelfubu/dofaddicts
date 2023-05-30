@@ -7,6 +7,7 @@ import {
 import { Harvest, HarvestItem, User } from '@prisma/client';
 
 import { PrismaService } from '../prisma.service';
+import { UserWithProgress } from '../user/models/user-with-progress.model';
 import { HarvestUpdateItemDto } from './dtos/harvest-update-item.dto';
 import { HarvestResponse, HarvestUser } from './models/harvest-response';
 import { MixedHarvest } from './models/mixed-harvest';
@@ -21,8 +22,8 @@ export class HarvestService {
   constructor(private readonly prisma: PrismaService) {}
 
   async update(
-    { id, harvestId, captured, amount }: HarvestUpdateItemDto,
-    user: User
+    { id, harvestId, captured, amount, type }: HarvestUpdateItemDto,
+    user: UserWithProgress
   ): Promise<void> {
     if (!user) throw new UnauthorizedException();
 
@@ -30,26 +31,24 @@ export class HarvestService {
       where: { harvestId: id, userHarvestId: harvestId },
     });
 
-    if (isNew) {
-      await this.prisma.harvestItem.update({
-        where: { id: isNew.id },
-        data: { captured, amount },
-      });
+    const data = {
+      captured,
+      amount,
+      ...this.handleUserProgress(captured, amount, user.userProgress.id, type),
+    };
 
+    if (isNew) {
+      await this.prisma.harvestItem.update({ where: { id: isNew.id }, data });
       return;
     }
 
     await this.prisma.harvestItem.upsert({
       where: { id },
-      update: {
-        captured,
-        amount,
-      },
+      update: data,
       create: {
         userHarvestId: harvestId,
         harvestId: id,
-        captured,
-        amount,
+        ...data,
       },
     });
   }
@@ -138,23 +137,38 @@ export class HarvestService {
     }
   }
 
-  async completeSteps(steps: number[], user: User): Promise<HarvestResponse> {
+  async completeSteps(
+    steps: number[],
+    user: UserWithProgress
+  ): Promise<HarvestResponse> {
     const { harvest } = await this.getAll(user);
 
     if (!harvest) throw new NotFoundException();
 
-    const { captured, repeated } = this.getCapturedAndRepeated(harvest, steps);
+    const { captured, repeated, skip, add } = this.getCapturedAndRepeated(
+      harvest,
+      steps
+    );
 
     try {
-      await this.prisma.harvestItem.updateMany({
-        where: { id: { in: captured } },
-        data: { captured: false },
-      });
-
-      await this.prisma.harvestItem.updateMany({
-        where: { id: { in: repeated } },
-        data: { amount: { decrement: 1 } },
-      });
+      await Promise.all([
+        this.prisma.harvestItem.updateMany({
+          where: { id: { in: captured } },
+          data: { captured: false },
+        }),
+        await this.prisma.harvestItem.updateMany({
+          where: { id: { in: repeated } },
+          data: { amount: { decrement: 1 } },
+        }),
+        await this.prisma.harvestItem.updateMany({
+          where: { id: { in: skip } },
+          data: { userProgressId: null },
+        }),
+        await this.prisma.harvestItem.updateMany({
+          where: { id: { in: add } },
+          data: { userProgressId: user.userProgress.id },
+        }),
+      ]);
     } catch (error) {
       throw new InternalServerErrorException();
     }
@@ -193,20 +207,41 @@ export class HarvestService {
   private getCapturedAndRepeated(
     harvest: MixedHarvest[],
     steps: number[]
-  ): { captured: string[]; repeated: string[] } {
-    return harvest.reduce<{ captured: string[]; repeated: string[] }>(
+  ): { captured: string[]; repeated: string[]; skip: string[]; add: string[] } {
+    return harvest.reduce<{
+      captured: string[];
+      repeated: string[];
+      skip: string[];
+      add: string[];
+    }>(
       (acc, curr) => {
         if (!steps.includes(curr.step)) return acc;
 
         if (curr.amount) {
+          if (curr.type === 2 && curr.amount === 1) {
+            acc.skip.push(curr.id);
+          }
+
           acc.repeated.push(curr.id);
           return acc;
         }
 
         acc.captured.push(curr.id);
+        acc.add.push(curr.id);
         return acc;
       },
-      { captured: [], repeated: [] }
+      { captured: [], repeated: [], skip: [], add: [] }
     );
+  }
+
+  private handleUserProgress(
+    captured: boolean,
+    amount: number,
+    userProgressId: string,
+    type: number
+  ) {
+    return captured && amount === 0 && type !== 2
+      ? { userProgressId: null }
+      : { userProgressId };
   }
 }

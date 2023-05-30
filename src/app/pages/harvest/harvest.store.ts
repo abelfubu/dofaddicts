@@ -29,7 +29,10 @@ import { HarvestFilter } from './services/harvest-filter';
 import { CHART_TYPE_DATA } from './tokens/chart-type-data.token';
 import { Filters } from './tokens/harvest-filter.token';
 
-export type UserHarvest = Pick<Harvest, 'id' | 'captured' | 'amount'> & {
+export type UserHarvest = Pick<
+  Harvest,
+  'id' | 'captured' | 'amount' | 'type'
+> & {
   harvestId?: string;
 };
 

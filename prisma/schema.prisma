@@ -31,13 +31,15 @@ type HarvestTranslation {
 }
 
 model HarvestItem {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
-  captured      Boolean     @default(false)
-  amount        Int         @default(0)
-  userHarvest   UserHarvest @relation(fields: [userHarvestId], references: [id])
-  userHarvestId String      @db.ObjectId
-  harvest       Harvest     @relation(fields: [harvestId], references: [id])
-  harvestId     String      @db.ObjectId
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  captured       Boolean       @default(false)
+  amount         Int           @default(0)
+  userHarvest    UserHarvest   @relation(fields: [userHarvestId], references: [id])
+  userHarvestId  String        @db.ObjectId
+  harvest        Harvest       @relation(fields: [harvestId], references: [id])
+  harvestId      String        @db.ObjectId
+  userProgress   UserProgress? @relation(fields: [userProgressId], references: [id])
+  userProgressId String?       @db.ObjectId
 }
 
 model UserHarvest {
@@ -49,18 +51,19 @@ model UserHarvest {
 }
 
 model User {
-  id               String      @id @default(auto()) @map("_id") @db.ObjectId
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId
   email            String
   password         String?
   picture          String?
-  currentHarvestId String      @default("")
-  harvest          UserHarvest @relation(fields: [userHarvestId], references: [id])
-  userHarvestId    String      @unique @db.ObjectId
-  server           Server?     @relation(fields: [serverId], references: [id])
-  serverId         String?     @db.ObjectId
+  currentHarvestId String        @default("")
+  harvest          UserHarvest   @relation(fields: [userHarvestId], references: [id])
+  userHarvestId    String        @unique @db.ObjectId
+  server           Server?       @relation(fields: [serverId], references: [id])
+  serverId         String?       @db.ObjectId
   discord          String?
-  activeAt         DateTime?   @default(now())
+  activeAt         DateTime?     @default(now())
   nickname         String?
+  userProgress     UserProgress?
 }
 
 model Server {
@@ -68,4 +71,11 @@ model Server {
   name String
   type Int
   User User[]
+}
+
+model UserProgress {
+  id                    String        @id @default(auto()) @map("_id") @db.ObjectId
+  user                  User          @relation(fields: [userId], references: [id])
+  userId                String        @unique @db.ObjectId
+  missingOrExchangeable HarvestItem[]
 }
