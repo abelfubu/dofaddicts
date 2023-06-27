@@ -49,5 +49,10 @@
     "text": "Valoramos tu ayuda para mejorar las traducciones y apreciamos cualquier idea que puedas tener. Contáctanos si deseas contribuir para hacer que nuestro contenido sea mejor para todos los usuarios.",
     "button": "Di Hola",
     "bottom": "Hecho con ❤️  por Dofaddicts"
+  },
+  "seo": {
+    "harvest": {
+      "description": "En Dofaddicts encontrarás una herramienta para administrar tu cosecha y intercambiar tus archimonstruos con otros jugadores."
+    }
   }
 }

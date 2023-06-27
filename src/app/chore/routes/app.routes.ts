@@ -4,7 +4,8 @@ import { Route, Router, UrlSegment } from '@angular/router';
 import { environment } from '@environments/environment';
 import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
 import { LoginComponent } from '@pages/login/login.component';
-import { LocalStorageService } from '@shared/services/local-storage.service';
+import { CookieService } from 'ngx-cookie-service';
+import { map } from 'rxjs';
 import { loginPath } from './paths/login.path';
 import { notFoundPath } from './paths/not-found.path';
 
@@ -16,9 +17,9 @@ export const appRoutes: Route[] = [
     canActivate: [
       (_route: Route) => {
         const router = inject(Router);
-        const localStorageService = inject(LocalStorageService);
+        const cookieService = inject(CookieService);
         const translate = inject(TranslocoService);
-        const favLang = localStorageService.get(environment.favLangKey);
+        const favLang = cookieService.get(environment.favLangKey);
 
         if (favLang) {
           router.navigate([favLang]);
@@ -27,7 +28,9 @@ export const appRoutes: Route[] = [
 
         const browserLang = getBrowserLang() || 'en';
 
-        if (translate.getAvailableLangs().some((lang) => lang === browserLang)) {
+        if (
+          translate.getAvailableLangs().some((lang) => lang === browserLang)
+        ) {
           router.navigate([browserLang]);
           return false;
         }
@@ -42,9 +45,13 @@ export const appRoutes: Route[] = [
       (_route: Route, segments: UrlSegment[]) => {
         const translate = inject(TranslocoService);
 
-        if (translate.getAvailableLangs().some((lang) => lang === segments[0].path)) {
+        if (
+          translate
+            .getAvailableLangs()
+            .some((lang) => lang === segments[0].path)
+        ) {
           translate.setActiveLang(segments[0].path);
-          return true;
+          return translate.load(segments[0].path).pipe(map(() => true));
         }
 
         return false;

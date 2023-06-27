@@ -49,5 +49,10 @@
     "text": "We value your help in improving translations and appreciate any ideas you may have. Contact me if you want to contribute for making our content better for all users.",
     "button": "Say Hello",
     "bottom": "Made with ❤️  by Dofaddicts"
+  },
+  "seo": {
+    "harvest": {
+      "description": "In Dofaddicts you will find a tool to manage your harvest, and exchange your archmonsters with other players"
+    }
   }
 }

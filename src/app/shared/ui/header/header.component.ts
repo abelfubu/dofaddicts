@@ -21,7 +21,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
 
 import { environment } from '@environments/environment';
-import { LocalStorageService } from '@shared/services/local-storage.service';
+import { CookieService } from 'ngx-cookie-service';
 import { GlobalStore } from '../../store/global.store';
 import { ButtonComponent } from '../button/button.component';
 import { BuyMeACoffeeComponent } from '../buy-me-coffee.component';
@@ -79,12 +79,12 @@ export class HeaderComponent {
   protected readonly store = inject(GlobalStore);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly localStorage = inject(LocalStorageService);
+  private readonly cookieService = inject(CookieService);
 
   selectedLanguage = signal<string>(this.translate.getActiveLang());
 
   onLangChange(lang: string): void {
-    this.localStorage.set(environment.favLangKey, lang);
+    this.cookieService.set(environment.favLangKey, lang);
     this.selectedLanguage.set(lang);
     this.router.navigate([lang, ...this.route.snapshot.url.map((u) => u.path)]);
   }

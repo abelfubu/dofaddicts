@@ -40,6 +40,7 @@
     "@ngneat/transloco": "^4.2.7",
     "@ngrx/component-store": "^16.0.0",
     "@nguniversal/express-engine": "^16.0.0",
+    "@ngx-lite/json-ld": "^14.0.0",
     "@prisma/client": "^4.14.1",
     "bcryptjs": "^2.4.3",
     "class-transformer": "0.4.0",

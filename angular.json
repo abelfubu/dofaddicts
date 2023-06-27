@@ -33,12 +33,12 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              "src/robots.txt",
               {
                 "glob": "**/*",
                 "input": "node_modules/@builder.io/partytown/lib",
                 "output": "/~partytown"
-              },
-              "src/manifest.webmanifest"
+              }
             ],
             "styles": ["src/styles.scss"],
             "scripts": [],
