@@ -50,6 +50,9 @@
     "button": "Sag Hallo",
     "bottom": "Mit ❤️  von Dofaddicts erstellt"
   },
+  "login": {
+    "success": "Willkommen!"
+  },
   "seo": {
     "harvest": {
       "description": "Bei Dofaddicts finden Sie ein Werkzeug zur Verwaltung Ihrer Ernte und zum Austausch Ihrer Archmonster mit anderen Spielern."

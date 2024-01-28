@@ -1,5 +1,5 @@
-@use 'colors' as colors;
-@use 'common' as common;
+@use "colors" as colors;
+@use "common" as common;
 
 $primary: map-get(
   $map: colors.$dark,
@@ -47,6 +47,10 @@ button {
     &:hover {
       box-shadow: 0 0 0 2px $accent;
     }
+  }
+
+  &.auto {
+    margin: auto;
   }
 }
 

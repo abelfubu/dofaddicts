@@ -50,6 +50,9 @@
     "button": "Dites bonjour",
     "bottom": "Créé avec ❤️  par Dofaddicts"
   },
+  "login": {
+    "success": "Bienvenue !"
+  },
   "seo": {
     "harvest": {
       "description": "Chez Dofaddicts, vous trouverez un outil pour gérer votre récolte et échanger vos archmonstres avec d'autres joueurs."

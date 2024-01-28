@@ -74,15 +74,15 @@ export class HarvestComponent implements OnInit {
   private readonly harvestStore = inject(HarvestStore);
   protected readonly harvestSEOData = harvestSEOData;
   private readonly meta = inject(Meta);
-  private readonly translate = inject(TranslocoService);
+  private readonly transloco = inject(TranslocoService);
 
   ngOnInit(): void {
     this.harvestStore.getData(this.route.snapshot.params['id']);
     this.harvestSEOData.meta.forEach(({ name, content }) =>
       this.meta.updateTag({
         name,
-        content: String(this.translate.translate(content)),
-      })
+        content: String(this.transloco.translate(content)),
+      }),
     );
   }
 

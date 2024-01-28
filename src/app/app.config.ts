@@ -1,4 +1,8 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
 import {
   APP_INITIALIZER,
   ApplicationConfig,
@@ -28,7 +32,10 @@ export function preloadUserLanguage() {
 
 export const config: ApplicationConfig = {
   providers: [
-    provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor])),
+    provideHttpClient(
+      withInterceptors([authInterceptor, loadingInterceptor]),
+      withFetch(),
+    ),
     provideRouter(appRoutes),
     provideAnimations(),
     importProvidersFrom([

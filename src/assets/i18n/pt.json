@@ -50,6 +50,9 @@
     "button": "Diga olá",
     "bottom": "Feito com ❤️  por Dofaddicts"
   },
+  "login": {
+    "success": "Bem-vindo!"
+  },
   "seo": {
     "harvest": {
       "description": "No Dofaddicts, você encontrará uma ferramenta para gerenciar sua colheita e trocar seus archmonstros com outros jogadores."

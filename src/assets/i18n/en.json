@@ -50,9 +50,12 @@
     "button": "Say Hello",
     "bottom": "Made with ❤️  by Dofaddicts"
   },
+  "login": {
+    "success": "Welcome!"
+  },
   "seo": {
     "harvest": {
-      "description": "In Dofaddicts you will find a tool to manage your harvest, and exchange your archmonsters with other players"
+      "description": "In Dofaddicts you will find a tool to manage your harvest, and exchange your nulls with other players"
     }
   }
 }

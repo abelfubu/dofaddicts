@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HotToastService } from '@ngneat/hot-toast';
+import { TranslocoService } from '@ngneat/transloco';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { CookieService } from 'ngx-cookie-service';
 import { switchMap } from 'rxjs/operators';
@@ -34,6 +35,7 @@ export class GlobalStore extends ComponentStore<GlobalState> {
   private readonly loginService = inject(LoginService);
   private readonly gtmTracking = inject(GtmTrackingService);
   private readonly cookieService = inject(CookieService);
+  private readonly transloco = inject(TranslocoService);
 
   constructor() {
     super({ ...DEFAULT_STATE, isLoggedIn: false });
@@ -53,14 +55,14 @@ export class GlobalStore extends ComponentStore<GlobalState> {
           tapResponse(
             (response) => {
               this.router.navigate(['/']);
-              this.toast.success('Bienvenido!');
+              this.toast.success(this.transloco.translate('login.success'));
               this.setLoggedIn(response);
             },
-            (error) => this.toast.error(String(error))
-          )
-        )
-      )
-    )
+            (error) => this.toast.error(String(error)),
+          ),
+        ),
+      ),
+    ),
   );
 
   readonly logout = this.updater((state) => {
@@ -77,7 +79,7 @@ export class GlobalStore extends ComponentStore<GlobalState> {
       this.gtmTracking.track(new LoginSuccessEvent());
 
       return { ...state, isLoggedIn: !!accessToken, user };
-    }
+    },
   );
 
   readonly setLoading = this.updater((state, loading: boolean) => ({

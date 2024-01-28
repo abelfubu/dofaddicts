@@ -1,6 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   inject,
@@ -24,7 +23,7 @@ declare var google: GoogleAuth;
   standalone: true,
   imports: [ReactiveFormsModule, InputComponent, ButtonComponent, RouterModule],
 })
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent {
   @ViewChild('googleButton', { read: ElementRef, static: true })
   private googleButton!: ElementRef<HTMLDivElement>;
 
@@ -39,12 +38,14 @@ export class LoginComponent implements AfterViewInit {
       [
         Validators.required,
         Validators.minLength(6),
-        Validators.pattern(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/),
+        Validators.pattern(
+          /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/,
+        ),
       ],
     ],
   });
 
-  ngAfterViewInit(): void {
+  ngAfterContentInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
     this.renderGoogleButton();
@@ -61,9 +62,11 @@ export class LoginComponent implements AfterViewInit {
   }
 
   private renderGoogleButton() {
-    google?.accounts.id.renderButton(
-      this.googleButton.nativeElement,
-      GOOGLE_BUTTON_CONFIG,
-    );
+    setTimeout(() => {
+      google?.accounts.id.renderButton(
+        this.googleButton.nativeElement,
+        GOOGLE_BUTTON_CONFIG,
+      );
+    }, 500);
   }
 }

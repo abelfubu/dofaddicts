@@ -50,6 +50,9 @@
     "button": "Di Hola",
     "bottom": "Hecho con ❤️  por Dofaddicts"
   },
+  "login": {
+    "success": "Bienvenid@!"
+  },
   "seo": {
     "harvest": {
       "description": "En Dofaddicts encontrarás una herramienta para administrar tu cosecha y intercambiar tus archimonstruos con otros jugadores."

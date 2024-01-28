@@ -1,16 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-button',
-  templateUrl: './button.component.html',
-  styleUrls: ['./button.component.scss'],
   standalone: true,
+  template: `
+    <button
+      [disabled]="disabled()"
+      [class.auto]="center()"
+      [class.accent]="accent()"
+    >
+      <span *ngIf="icon()" class="material-symbols-outlined">
+        {{ icon() }}
+      </span>
+      <ng-content />
+    </button>
+  `,
+  styleUrl: './button.component.scss',
   imports: [CommonModule],
 })
 export class ButtonComponent {
-  @Input() disabled = false;
-  @Input() icon = '';
-  @Input() center = false;
-  @Input() accent = false;
+  icon = input('');
+  disabled = input(false);
+  center = input(false);
+  accent = input(false);
 }
