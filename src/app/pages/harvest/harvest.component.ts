@@ -49,13 +49,16 @@ export const EDITABLE = new InjectionToken<Observable<boolean>>('EDITABLE');
     },
   ],
   template: `
-    <ngx-json-ld [json]="harvestSEOData.schema"></ngx-json-ld>
-    <app-header (logout)="onLogout()" />
-    <app-harvest-filters (changed)="onSearchChange($event)" />
-    <app-harvest-table
-      [data]="data$ | async"
-      (scrolled)="handleInfiniteScroll()"
-    ></app-harvest-table>
+    <ng-container *transloco="let t">
+      <ngx-json-ld [json]="harvestSEOData.schema"></ngx-json-ld>
+      <app-header (logout)="onLogout()" />
+      <h1 style="visibility: hidden">{{ t('home.title') }}</h1>
+      <app-harvest-filters (changed)="onSearchChange($event)" />
+      <app-harvest-table
+        [data]="data$ | async"
+        (scrolled)="handleInfiniteScroll()"
+      ></app-harvest-table>
+    </ng-container>
   `,
   styles: [
     `

@@ -4,6 +4,7 @@
     "harvest": "Il mio raccolto"
   },
   "home": {
+    "title": "Dofus L'eterna mietitura",
     "monsters": "Mostri",
     "bosses": "Boss",
     "archis": "Archis",
@@ -45,7 +46,7 @@
     }
   },
   "footer": {
-    "title": "Grazie per utilizzare Dofaddicts!",
+    "title": "Grazie per aver utilizzato Dofaddicts per la tua avventura in Dofus e per aver conquistato la missione \"L'eterna mietitura\"!",
     "text": "Apprezziamo il tuo aiuto nel migliorare le traduzioni e qualsiasi idea tu possa avere. Contattaci se desideri contribuire a rendere il nostro contenuto migliore per tutti gli utenti.",
     "button": "Di ciao",
     "bottom": "Realizzato con ❤️  da Dofaddicts"

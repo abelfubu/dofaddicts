@@ -4,6 +4,7 @@
     "my harvest": "Meine Ernte"
   },
   "home": {
+    "title": "Dofus Die ewige Ernte",
     "monsters": "Scheusale",
     "bosses": "Köpfe",
     "archis": "Archis",
@@ -45,7 +46,7 @@
     }
   },
   "footer": {
-    "title": "Vielen Dank für die Nutzung von Dofaddicts!",
+    "title": "Vielen Dank, dass Sie Dofaddicts für Ihr Dofus-Abenteuer und die Eroberung der Quest \"Die Ewige Ernte\" verwenden!",
     "text": "Wir schätzen deine Hilfe bei der Verbesserung von Übersetzungen und freuen uns über jede Idee, die du haben könntest. Kontaktiere uns, wenn du dazu beitragen möchtest, unseren Inhalt für alle Benutzer zu verbessern.",
     "button": "Sag Hallo",
     "bottom": "Mit ❤️  von Dofaddicts erstellt"

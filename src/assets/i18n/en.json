@@ -4,6 +4,7 @@
     "harvest": "My harvest"
   },
   "home": {
+    "title": "Dofus An Eternal Harvest",
     "monsters": "Monsters",
     "bosses": "Bosses",
     "archis": "Archis",
@@ -45,7 +46,7 @@
     }
   },
   "footer": {
-    "title": "Thanks for using Dofaddicts!",
+    "title": "Thanks for using Dofaddicts for your \"Dofus\" adventure and conquering \"An Eternal Harvest\" quest!",
     "text": "We value your help in improving translations and appreciate any ideas you may have. Contact me if you want to contribute for making our content better for all users.",
     "button": "Say Hello",
     "bottom": "Made with ❤️  by Dofaddicts"

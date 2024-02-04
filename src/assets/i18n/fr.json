@@ -4,6 +4,7 @@
     "harvest": "Ma récolte"
   },
   "home": {
+    "title": "Dofus L'éternelle moisson",
     "monsters": "Monstres",
     "bosses": "Face",
     "archis": "Archis",
@@ -45,7 +46,7 @@
     }
   },
   "footer": {
-    "title": "Merci d'utiliser Dofaddicts !",
+    "title": "Merci d'utiliser Dofaddicts pour votre aventure dans Dofus et conquérir la quête \"L'éternelle moisson\" !",
     "text": "Nous apprécions votre aide pour améliorer les traductions et toute idée que vous pourriez avoir. Contactez-nous si vous souhaitez contribuer à améliorer notre contenu pour tous les utilisateurs.",
     "button": "Dites bonjour",
     "bottom": "Créé avec ❤️  par Dofaddicts"

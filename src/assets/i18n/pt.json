@@ -4,6 +4,7 @@
     "harvest": "Minha colheita"
   },
   "home": {
+    "title": "Dofus Colheita eterna",
     "monsters": "Monstros",
     "bosses": "Chefes",
     "archis": "Arquis",
@@ -45,7 +46,7 @@
     }
   },
   "footer": {
-    "title": "Obrigado por usar o Dofaddicts!",
+    "title": "Obrigado por usar o Dofaddicts na sua aventura em Dofus e conquistar a missão \"Colheita eterna\"!",
     "text": "Valorizamos sua ajuda na melhoria das traduções e apreciamos qualquer ideia que você possa ter. Entre em contato conosco se quiser contribuir para tornar nosso conteúdo melhor para todos os usuários.",
     "button": "Diga olá",
     "bottom": "Feito com ❤️  por Dofaddicts"
