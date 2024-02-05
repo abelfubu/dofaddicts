@@ -10,13 +10,13 @@
         [routerLink]="['/', vm.lang]"
         [routerLinkActive]="'active'"
         [routerLinkActiveOptions]="{ exact: true }"
-        >{{ t('header.harvest') }}</a
+        >{{ t("header.harvest") }}</a
       >
       <a
         *ngIf="vm.isLoggedIn"
         [routerLink]="['/', vm.lang, 'exchange']"
         [routerLinkActive]="'active'"
-        >{{ t('header.exchange') }}</a
+        >{{ t("header.exchange") }}</a
       >
     </nav>
     <nav>
@@ -58,21 +58,33 @@
         Log In
       </app-button>
 
-      <app-button [matMenuTriggerFor]="menu">
-        <div class="language-flag">
-          <img
-            src="./assets/flags/{{ selectedLanguage() }}.png"
-            alt="Language Flag"
-            width="24"
-            height="24"
-          />
-          {{ selectedLanguage() | uppercase }}
-        </div>
-      </app-button>
-      <mat-menu #menu="matMenu">
-        <button
+      <div>
+        <app-button
+          (click)="languageSelectorVisible.set(!languageSelectorVisible())"
+        >
+          <div class="language-flag">
+            <img
+              src="./assets/flags/{{ selectedLanguage() }}.png"
+              alt="Language Flag"
+              width="24"
+              height="24"
+            />
+            {{ selectedLanguage() | uppercase }}
+          </div>
+        </app-button>
+        <app-language-selector
+          [visible]="languageSelectorVisible()"
+          [path]="vm.path"
+          [currentLang]="selectedLanguage()"
+          [languages]="vm.languages"
+          (langChange)="onLangChange($event)"
+        />
+      </div>
+      <!-- <mat-menu #menu="matMenu">
+        <a
           *ngFor="let language of vm.languages"
           mat-menu-item
+          [routerLink]="['/', language, vm.path]"
           (click)="onLangChange(language)"
         >
           <div class="language-flag">
@@ -84,8 +96,8 @@
             />
             {{ language | uppercase }}
           </div>
-        </button>
-      </mat-menu>
+        </a>
+      </mat-menu> -->
       <app-buy-me-coffee />
     </nav>
   </header>
@@ -94,5 +106,5 @@
     *ngIf="store.loading$ | async"
     mode="indeterminate"
     [color]="'accent'"
-  ></mat-progress-bar>
+  />
 </ng-container>

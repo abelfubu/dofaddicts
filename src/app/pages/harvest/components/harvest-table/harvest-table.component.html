@@ -6,9 +6,8 @@
     [infiniteScrollThrottle]="400"
     (scrolled)="scrolled.emit()"
   >
-    <app-harvest-item
-      *ngFor="let item of data; let index = index; trackBy: trackByFn"
-      [item]="item"
-    ></app-harvest-item>
+    @for (item of data; track item.id) {
+      <app-harvest-item [item]="item" />
+    }
   </div>
 </ng-container>

@@ -1,8 +1,10 @@
 import { inject } from '@angular/core';
-import { Route, Router, UrlSegment } from '@angular/router';
+import { Route, UrlSegment } from '@angular/router';
 
+import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
+import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { LoginComponent } from '@pages/login/login.component';
 import { CookieService } from 'ngx-cookie-service';
 import { map } from 'rxjs';
@@ -16,13 +18,18 @@ export const appRoutes: Route[] = [
     component: LoginComponent,
     canActivate: [
       (_route: Route) => {
-        const router = inject(Router);
         const cookieService = inject(CookieService);
         const translate = inject(TranslocoService);
         const favLang = cookieService.get(environment.favLangKey);
+        const response = inject(RESPONSE, { optional: true });
+        const router = inject(Router);
 
         if (favLang) {
-          router.navigate([favLang]);
+          if (window !== undefined) {
+            router.navigate([`/${favLang}`]);
+          } else {
+            response?.redirect(301, `/${favLang}`);
+          }
           return false;
         }
 
@@ -31,7 +38,11 @@ export const appRoutes: Route[] = [
         if (
           translate.getAvailableLangs().some((lang) => lang === browserLang)
         ) {
-          router.navigate([browserLang]);
+          if (window !== undefined) {
+            router.navigate([`/${browserLang}`]);
+          } else {
+            response?.redirect(301, `/${browserLang}`);
+          }
           return false;
         }
 

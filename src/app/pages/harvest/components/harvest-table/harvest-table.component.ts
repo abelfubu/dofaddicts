@@ -35,8 +35,4 @@ export class HarvestTableComponent {
       panelClass: 'background',
     });
   }
-
-  trackByFn(_index: number, item: Harvest): string {
-    return item.id;
-  }
 }

@@ -8,12 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import {
-  ActivatedRoute,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-} from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { Observable, map, switchMap } from 'rxjs';
 
@@ -25,6 +20,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { GlobalStore } from '../../store/global.store';
 import { ButtonComponent } from '../button/button.component';
 import { BuyMeACoffeeComponent } from '../buy-me-coffee.component';
+import { LanguageSelectorComponent } from '../language-selector/language-selector.component';
 
 interface HeaderViewModel {
   isLoggedIn: boolean;
@@ -32,6 +28,7 @@ interface HeaderViewModel {
   picture: string;
   lang: string;
   languages: string[];
+  path: string[];
 }
 
 const HEADER_VM = new InjectionToken<Observable<HeaderViewModel>>('HEADER_VM');
@@ -51,11 +48,16 @@ const HEADER_VM = new InjectionToken<Observable<HeaderViewModel>>('HEADER_VM');
     RouterLinkActive,
     MatProgressBarModule,
     BuyMeACoffeeComponent,
+    LanguageSelectorComponent,
   ],
   providers: [
     {
       provide: HEADER_VM,
-      useFactory: (global: GlobalStore, translate: TranslocoService) =>
+      useFactory: (
+        global: GlobalStore,
+        translate: TranslocoService,
+        route: ActivatedRoute,
+      ) =>
         translate.langChanges$.pipe(
           switchMap(() =>
             global.user$.pipe(
@@ -63,11 +65,12 @@ const HEADER_VM = new InjectionToken<Observable<HeaderViewModel>>('HEADER_VM');
                 ...user,
                 lang: translate.getActiveLang(),
                 languages: translate.getAvailableLangs(),
-              }))
-            )
-          )
+                path: route.snapshot.url.map((u) => u.path),
+              })),
+            ),
+          ),
         ),
-      deps: [GlobalStore, TranslocoService],
+      deps: [GlobalStore, TranslocoService, ActivatedRoute],
     },
   ],
 })
@@ -77,16 +80,15 @@ export class HeaderComponent {
   protected readonly vm$ = inject(HEADER_VM);
   protected readonly translate = inject(TranslocoService);
   protected readonly store = inject(GlobalStore);
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
   private readonly cookieService = inject(CookieService);
 
   selectedLanguage = signal<string>(this.translate.getActiveLang());
+  languageSelectorVisible = signal(false);
 
   onLangChange(lang: string): void {
+    this.languageSelectorVisible.set(false);
     this.cookieService.set(environment.favLangKey, lang);
     this.selectedLanguage.set(lang);
-    this.router.navigate([lang, ...this.route.snapshot.url.map((u) => u.path)]);
   }
 
   onLogout(): void {

@@ -36,6 +36,11 @@ $dofus-cosecha-theme: mat.define-light-theme(
 // that you are using.
 @include mat.all-component-themes($dofus-cosecha-theme);
 
+:root {
+  --mat-menu-container-color: map-get($map: c.$dark, $key: 400);
+  --mat-menu-item-label-text-color: #ffffffaa;
+}
+
 * {
   font-family: "Open Sans", sans-serif;
   box-sizing: border-box;
@@ -94,7 +99,7 @@ input[type="checkbox"] {
   background-color: map-get($map: c.$dark, $key: 400);
 }
 
-.mdc-menu-surface {
+.mat-mdc-menu-panel {
   background-color: map-get($map: c.$dark, $key: 400);
 }
 

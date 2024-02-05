@@ -1,0 +1,31 @@
+@use "colors" as colors;
+@use "common" as common;
+
+:host {
+  position: absolute;
+  z-index: 1000;
+}
+
+.hidden {
+  visibility: hidden;
+  height: 0;
+}
+
+.language-selector {
+  border-radius: 4px;
+  padding: 0.5rem 0;
+  box-shadow: common.border-shadow-hover(map-get(colors.$dark, 300));
+  background-color: map-get($map: colors.$dark, $key: 400);
+}
+
+a {
+  display: flex;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: colors.$light;
+}
+
+span {
+  margin-left: 1rem;
+}

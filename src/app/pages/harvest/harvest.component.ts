@@ -7,6 +7,7 @@ import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
 import { NgxJsonLdModule } from '@ngx-lite/json-ld';
 import { Observable } from 'rxjs';
 import { HeaderComponent } from 'src/app/shared/ui/header/header.component';
+import { Link } from '../../shared/services/link.service';
 import { HarvestFiltersComponent } from './components/harvest-filters/harvest-filters.component';
 import { HarvestStepModalComponent } from './components/harvest-filters/harvest-step-modal/harvest-step-modal.component';
 import { HarvestTableComponent } from './components/harvest-table/harvest-table.component';
@@ -52,7 +53,7 @@ export const EDITABLE = new InjectionToken<Observable<boolean>>('EDITABLE');
     <ng-container *transloco="let t">
       <ngx-json-ld [json]="harvestSEOData.schema"></ngx-json-ld>
       <app-header (logout)="onLogout()" />
-      <h1 style="visibility: hidden">{{ t('home.title') }}</h1>
+      <h1>{{ t('home.title') }}</h1>
       <app-harvest-filters (changed)="onSearchChange($event)" />
       <app-harvest-table
         [data]="data$ | async"
@@ -66,6 +67,11 @@ export const EDITABLE = new InjectionToken<Observable<boolean>>('EDITABLE');
         display: block;
         margin: auto;
         min-height: 80vh;
+
+        h1 {
+          visibility: hidden;
+          height: 0;
+        }
       }
     `,
   ],
@@ -77,10 +83,12 @@ export class HarvestComponent implements OnInit {
   private readonly harvestStore = inject(HarvestStore);
   protected readonly harvestSEOData = harvestSEOData;
   private readonly meta = inject(Meta);
+  private readonly link = inject(Link);
   private readonly transloco = inject(TranslocoService);
 
   ngOnInit(): void {
     this.harvestStore.getData(this.route.snapshot.params['id']);
+    this.harvestSEOData.hrefLangs.forEach((link) => this.link.addLink(link));
     this.harvestSEOData.meta.forEach(({ name, content }) =>
       this.meta.updateTag({
         name,
