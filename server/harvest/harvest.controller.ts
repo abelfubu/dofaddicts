@@ -35,7 +35,7 @@ export class HarvestController {
   @UseGuards(JwtAuthGuard)
   update(
     @GetUser() user: UserWithProgress,
-    @Body() harvestUpdateItemDto: HarvestUpdateItemDto
+    @Body() harvestUpdateItemDto: HarvestUpdateItemDto,
   ): Promise<void> {
     return this.harvestService.update(harvestUpdateItemDto, user);
   }
@@ -45,8 +45,13 @@ export class HarvestController {
   completeSteps(
     @GetUser() user: UserWithProgress,
     @Body(CompletedStepsPipe)
-    harvestCompleteStepsDto: number[]
+    harvestCompleteStepsDto: number[],
   ): Promise<HarvestResponse> {
     return this.harvestService.completeSteps(harvestCompleteStepsDto, user);
+  }
+
+  @Get('ping')
+  test(): string {
+    return 'OK';
   }
 }

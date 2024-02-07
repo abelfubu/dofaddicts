@@ -23,7 +23,7 @@ export class HarvestService {
 
   async update(
     { id, harvestId, captured, amount, type }: HarvestUpdateItemDto,
-    user: UserWithProgress
+    user: UserWithProgress,
   ): Promise<void> {
     if (!user) throw new UnauthorizedException();
 
@@ -139,7 +139,7 @@ export class HarvestService {
 
   async completeSteps(
     steps: number[],
-    user: UserWithProgress
+    user: UserWithProgress,
   ): Promise<HarvestResponse> {
     const { harvest } = await this.getAll(user);
 
@@ -147,7 +147,7 @@ export class HarvestService {
 
     const { captured, repeated, skip, add } = this.getCapturedAndRepeated(
       harvest,
-      steps
+      steps,
     );
 
     try {
@@ -183,7 +183,7 @@ export class HarvestService {
 
   private getUserMixedData(
     harvest: Harvest[],
-    userHarvestMap: UserHarvestMap
+    userHarvestMap: UserHarvestMap,
   ): MixedHarvest[] {
     return harvest.map((item) => {
       const exist = userHarvestMap[item.id];
@@ -200,13 +200,13 @@ export class HarvestService {
         acc[harvestId] = { id, captured, amount };
         return acc;
       },
-      {}
+      {},
     );
   }
 
   private getCapturedAndRepeated(
     harvest: MixedHarvest[],
-    steps: number[]
+    steps: number[],
   ): { captured: string[]; repeated: string[]; skip: string[]; add: string[] } {
     return harvest.reduce<{
       captured: string[];
@@ -230,7 +230,7 @@ export class HarvestService {
         acc.add.push(curr.id);
         return acc;
       },
-      { captured: [], repeated: [], skip: [], add: [] }
+      { captured: [], repeated: [], skip: [], add: [] },
     );
   }
 
@@ -238,7 +238,7 @@ export class HarvestService {
     captured: boolean,
     amount: number,
     userProgressId: string,
-    type: number
+    type: number,
   ) {
     return captured && amount === 0 && type !== 2
       ? { userProgressId: null }
