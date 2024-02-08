@@ -20,6 +20,11 @@ export class HarvestController {
     return this.harvestService.getAll(user);
   }
 
+  @Get('ping')
+  test(): string {
+    return 'OK';
+  }
+
   @Get('refresh')
   refresh(): RefreshResponse {
     return this.harvestService.refresh();
@@ -48,10 +53,5 @@ export class HarvestController {
     harvestCompleteStepsDto: number[],
   ): Promise<HarvestResponse> {
     return this.harvestService.completeSteps(harvestCompleteStepsDto, user);
-  }
-
-  @Get('ping')
-  test(): string {
-    return 'OK';
   }
 }

@@ -5,64 +5,80 @@ import {
 } from '@nestjs/common';
 import { Harvest, User } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
-import { ExchangeResponse } from './models/exchange.response';
 
 @Injectable()
 export class ExchangeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async get(user: User): Promise<ExchangeResponse[]> {
+  async get(user: User): Promise<any> {
     if (!user.id) throw new UnauthorizedException();
 
     if (!user.serverId) throw new BadRequestException();
-
-    const querys = [
-      this.prisma.harvestItem.findMany(
-        this.getExchangeQuery(user.id, { captured: true })
-      ),
-      this.prisma.harvestItem.findMany(
-        this.getExchangeQuery(user.id, { amount: { gt: 0 } })
-      ),
-    ];
-
-    const [missing, repeated] = await Promise.all(querys);
-
-    const [fromUsers, fromMe] = await Promise.all([
-      this.getAvailableItems(
-        user,
-        {
-          amount: { gt: 0 },
-          AND: {
-            harvestId: { notIn: missing.map((x) => x.harvestId) },
-          },
-        },
-        'his'
-      ),
-      this.getAvailableItems(
-        user,
-        {
-          captured: false,
-          AND: {
-            harvestId: { in: repeated.map((x) => x.harvestId) },
-          },
-        },
-        'mine'
-      ),
-    ]);
-
-    // @ts-ignore
-    return fromUsers.map((user) => {
-      const found = fromMe.find((x) => x.userHarvestId === user.userHarvestId);
-      return found
-        ? {
-            ...user,
-            harvest: {
-              his: user.harvest['his'],
-              mine: found.harvest['mine'],
+    const harvestRequest = this.prisma.harvest.findMany();
+    const dataRequest = this.prisma.user.findMany({
+      orderBy: {
+        activeAt: 'desc',
+      },
+      where: {
+        // id: { not: user.id },
+        serverId: user.serverId,
+      },
+      select: {
+        picture: true,
+        nickname: true,
+        discord: true,
+        userHarvestId: true,
+        userProgress: {
+          select: {
+            missingOrExchangeable: {
+              select: {
+                amount: true,
+                captured: true,
+                harvest: {
+                  select: {
+                    type: true,
+                    id: true,
+                  },
+                },
+              },
             },
-          }
-        : user;
+          },
+        },
+      },
     });
+
+    const [harvest, data] = await Promise.all([harvestRequest, dataRequest]);
+
+    return {
+      harvest: harvest.reduce<Record<string, Harvest>>(
+        (accumulator, current) => {
+          accumulator[current.id] = current;
+          return accumulator;
+        },
+        {},
+      ),
+      items: data.map(({ userProgress, ...user }) => {
+        return userProgress?.missingOrExchangeable.reduce(
+          (accumulator, current) => {
+            if (!current.captured) {
+              accumulator.missing[current?.harvest?.type].push(
+                current?.harvest?.id,
+              );
+            } else if (current.captured && current.amount) {
+              accumulator.repeated[current.harvest.type].push(
+                current.harvest.id,
+              );
+            }
+            return accumulator;
+          },
+          {
+            ...user,
+            missing: { 0: [], 1: [], 2: [] } as Record<number, string[]>,
+            repeated: { 0: [], 1: [], 2: [] } as Record<number, string[]>,
+          },
+        );
+      }),
+    };
   }
 
   private getExchangeQuery(id: string, AND: Record<string, unknown>) {
@@ -80,7 +96,7 @@ export class ExchangeService {
   private async getAvailableItems(
     { id, serverId }: User,
     where: Record<string, unknown>,
-    key: 'his' | 'mine'
+    key: 'his' | 'mine',
   ) {
     const result = await this.prisma.user.findMany({
       orderBy: {
@@ -126,7 +142,7 @@ export class ExchangeService {
             0: [],
             1: [],
             2: [],
-          }
+          },
         ),
       },
     }));
