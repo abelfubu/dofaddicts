@@ -1,13 +1,15 @@
-import { Harvest } from '../../harvest/models/harvest';
+import { Harvest } from '@prisma/client';
+
+export interface ExchangeUser {
+  picture?: string;
+  nickname?: string;
+  discord?: string;
+  userHarvestId?: string;
+  missing: Record<number, string[]>;
+  repeated: Record<number, string[]>;
+}
 
 export interface ExchangeResponse {
-  discord: string;
-  nickname: string;
-  picture: string;
-  userHarvestId: string;
-  server: string;
-  harvest: {
-    his: Record<number, Harvest[]>;
-    mine: Record<number, Harvest[]>;
-  };
+  harvest: Record<string, Harvest>;
+  users: ExchangeUser[];
 }

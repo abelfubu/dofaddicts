@@ -36,6 +36,8 @@
     "monsters": "Mostri",
     "bosses": "Boss",
     "archis": "Archis",
+    "youCanGive": "Puoi consegnarlo a {{ name }}!",
+    "heCanGive": "{{ name }} può consegnartelo!",
     "name": "Nome",
     "title": "Giocatori in {{ server }}",
     "error": {

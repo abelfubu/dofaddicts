@@ -38,6 +38,8 @@
     "archis": "Archis",
     "name": "Nombre",
     "title": "Jugadores en {{ server }}",
+    "youCanGive": "¡Le puedes entregar a {{ name }}!",
+    "heCanGive": "¡{{ name }} puede entregarte a ti!",
     "error": {
       "title": "Actualiza tu perfil primero",
       "message": "Para poder intercambiar con otros usuarios, primero debes actualizar tu perfil con la información del juego y servidor.",

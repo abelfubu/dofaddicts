@@ -1,6 +1,5 @@
 import { NgForOf, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
@@ -25,13 +24,16 @@ import { ExchangeStore } from './exchange.store';
     <ng-container *transloco="let t">
       <app-header />
 
-      <ng-container *ngIf="!vm()?.error; else error">
-        <h1 *ngIf="vm()?.users?.length">
-          {{ t('exchange.title', { server: vm()?.users?.at(0)?.server }) }}
+      <ng-container *ngIf="!store.vm()?.error; else error">
+        <h1 *ngIf="store.vm()?.users?.length">
+          <!-- {{ t('exchange.title', { server: vm()?.users?.at(0)?.server }) }} -->
         </h1>
 
         <div class="card-container">
-          <app-user-exchange-card *ngFor="let user of vm()?.users" [user]="user" />
+          <app-user-exchange-card
+            *ngFor="let user of store.vm()?.users"
+            [user]="user"
+          />
         </div>
       </ng-container>
 
@@ -40,9 +42,10 @@ import { ExchangeStore } from './exchange.store';
           <h1>{{ t('exchange.error.title') }}</h1>
           <p>{{ t('exchange.error.message') }}</p>
           <div class="actions">
-            <app-button [routerLink]="['/', translate.getActiveLang(), 'profile']">{{
-              t('exchange.error.button')
-            }}</app-button>
+            <app-button
+              [routerLink]="['/', translate.getActiveLang(), 'profile']"
+              >{{ t('exchange.error.button') }}</app-button
+            >
             <app-button>{{ t('exchange.error.back') }}</app-button>
           </div>
         </div>
@@ -85,9 +88,8 @@ import { ExchangeStore } from './exchange.store';
   ],
 })
 export class ExchangeComponent {
-  private readonly store = inject(ExchangeStore);
+  protected readonly store = inject(ExchangeStore);
   protected readonly translate = inject(TranslocoService);
-  protected readonly vm = toSignal(this.store.vm$);
 
   ngOnInit(): void {
     this.store.getUsers();

@@ -5,7 +5,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { TranslocoModule } from '@ngneat/transloco';
 import { from } from 'rxjs';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
-import { ExchangeResponse } from '../models/exchange.response';
+import { ExchangeUser } from '../models/exchange.response';
 
 @Component({
   selector: 'app-user-exchange-card',
@@ -27,10 +27,11 @@ import { ExchangeResponse } from '../models/exchange.response';
       <div class="cell">
         <div class="title">
           <small>Discord ID</small>
-          <h3>{{ user.discord || '' }}</h3>
+          <h3>{{ user.discord || '-' }}</h3>
         </div>
       </div>
 
+      <h3>{{ t('exchange.youCanGive', { name: user.nickname }) }}</h3>
       <div class="harvest-info">
         <div
           class="cell amount purple"
@@ -40,7 +41,7 @@ import { ExchangeResponse } from '../models/exchange.response';
           <div class="title">
             <small>Monsters</small>
           </div>
-          <h3>{{ user.harvest.his[0].length }}</h3>
+          <h3>{{ user.missing[0].length }}</h3>
         </div>
 
         <div
@@ -51,7 +52,7 @@ import { ExchangeResponse } from '../models/exchange.response';
           <div class="title">
             <small>Bosses</small>
           </div>
-          <h3>{{ user.harvest.his[1].length }}</h3>
+          <h3>{{ user.missing[1].length }}</h3>
         </div>
 
         <div
@@ -62,7 +63,43 @@ import { ExchangeResponse } from '../models/exchange.response';
           <div class="title">
             <small>Archis</small>
           </div>
-          <h3>{{ user.harvest.his[2].length }}</h3>
+          <h3>{{ user.missing[2].length }}</h3>
+        </div>
+      </div>
+
+      <h3>{{ t('exchange.heCanGive', { name: user.nickname }) }}</h3>
+      <div class="harvest-info">
+        <div
+          class="cell amount purple"
+          [routerLink]="['/es', 'share', user.userHarvestId]"
+          [queryParams]="{ selection: 'monsters' }"
+        >
+          <div class="title">
+            <small>Monsters</small>
+          </div>
+          <h3>{{ user.repeated[0].length }}</h3>
+        </div>
+
+        <div
+          class="cell amount blue"
+          [routerLink]="['/es', 'share', user.userHarvestId]"
+          [queryParams]="{ selection: 'bosses' }"
+        >
+          <div class="title">
+            <small>Bosses</small>
+          </div>
+          <h3>{{ user.repeated[1].length }}</h3>
+        </div>
+
+        <div
+          class="cell amount yellow"
+          [routerLink]="['/es', 'share', user.nickname]"
+          [queryParams]="{ selection: 'archis' }"
+        >
+          <div class="title">
+            <small>Archis</small>
+          </div>
+          <h3>{{ user.repeated[2].length }}</h3>
         </div>
       </div>
     </div>
@@ -134,7 +171,7 @@ import { ExchangeResponse } from '../models/exchange.response';
   ],
 })
 export class UserExchangeCardComponent {
-  @Input({ required: true }) user!: ExchangeResponse;
+  @Input({ required: true }) user!: ExchangeUser;
 
   private readonly toast = inject(HotToastService);
 
@@ -145,7 +182,7 @@ export class UserExchangeCardComponent {
           loading: 'Copiando url en el portapapeles',
           success: 'Comando copiado en el portapapeles',
           error: 'Algo ha ido mal, intentalo más tarde',
-        })
+        }),
       )
       .subscribe();
   }
