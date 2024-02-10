@@ -10,8 +10,8 @@ import { BuyMeACoffeeComponent } from '../buy-me-coffee.component';
   template: `
     <footer *transloco="let t">
       <header>
-        <h3>{{ t('footer.title') }}</h3>
-        <p>{{ t('footer.text') }}</p>
+        <h3 class="m-0">{{ t('footer.title') }}</h3>
+        <p class="p-1">{{ t('footer.text') }}</p>
 
         <div class="actions">
           <a href="mailto:abelfubu@gmail.com">
@@ -30,7 +30,6 @@ import { BuyMeACoffeeComponent } from '../buy-me-coffee.component';
       @use 'colors' as colors;
 
       :host {
-        height: 31.25rem;
         display: grid;
         place-content: center;
         text-align: center;
@@ -38,10 +37,6 @@ import { BuyMeACoffeeComponent } from '../buy-me-coffee.component';
         a {
           text-decoration: none;
           transform: translateY(3px);
-        }
-
-        p {
-          padding: 2rem 0;
         }
 
         hr {

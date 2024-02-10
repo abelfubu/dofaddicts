@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ButtonComponent } from '@shared/ui/button/button.component';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { HarvestStore } from '../../../harvest.store';
 import { HarvestSteps } from '../../../models/harvest-steps';
 
@@ -11,7 +12,7 @@ import { HarvestSteps } from '../../../models/harvest-steps';
   templateUrl: './harvest-step-modal.component.html',
   styleUrls: ['./harvest-step-modal.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, ButtonModule, CheckboxModule],
 })
 export class HarvestStepModalComponent {
   form!: FormGroup;
@@ -19,12 +20,12 @@ export class HarvestStepModalComponent {
   steps!: boolean[];
 
   private readonly formBuilder = inject(FormBuilder);
-  private readonly dialogRef = inject(MatDialogRef);
-  private readonly data = inject<boolean[]>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject(DynamicDialogRef, { optional: true });
+  private readonly config = inject(DynamicDialogConfig);
 
   ngOnInit(): void {
-    this.steps = this.data;
-    this.initializeStepsForm(this.data);
+    this.steps = this.config.data;
+    this.initializeStepsForm(this.config.data);
   }
 
   setAllControls(steps: boolean[], value: boolean): void {
@@ -32,11 +33,11 @@ export class HarvestStepModalComponent {
   }
 
   applySteps(): void {
-    this.dialogRef.close(this.form.value);
+    this.dialogRef?.close(this.form.value);
   }
 
   closeModal(): void {
-    this.dialogRef.close();
+    this.dialogRef?.close();
   }
 
   private initializeStepsForm(steps: boolean[]): void {

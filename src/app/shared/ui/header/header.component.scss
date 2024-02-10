@@ -1,4 +1,4 @@
-@use 'colors' as c;
+@use "colors" as c;
 
 header {
   display: flex;
@@ -14,14 +14,13 @@ header {
   h3 {
     flex: 1 0 0;
     margin-left: 0.3rem;
-    font-family: 'Delicious Handrawn', cursive;
+    font-family: "Delicious Handrawn", cursive;
     font-size: 2rem;
   }
 
   nav {
     display: flex;
     align-items: center;
-    gap: 1rem;
 
     .logo-container {
       display: flex;
@@ -31,17 +30,8 @@ header {
     }
 
     .active {
-      color: map-get($map: c.$primary, $key: 400);
-    }
-
-    a {
-      text-decoration: none;
-      color: c.$light;
-      transition: color 200ms;
-
-      &:hover {
-        color: map-get($map: c.$primary, $key: 400);
-      }
+      background-color: var(--primary-900);
+      border-radius: 4px;
     }
 
     .avatar {

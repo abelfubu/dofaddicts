@@ -69,6 +69,7 @@ import { ExchangeStore } from './exchange.store';
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         grid-gap: 1rem;
+        padding-bottom: 5rem;
       }
 
       .error {

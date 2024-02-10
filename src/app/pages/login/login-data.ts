@@ -1,5 +1,5 @@
 export const GOOGLE_BUTTON_CONFIG = {
-  theme: 'filled_blue',
+  theme: 'light',
   size: 'large',
   width: '500px',
   logo_alignment: 'center',

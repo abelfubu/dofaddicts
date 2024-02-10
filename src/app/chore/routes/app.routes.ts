@@ -25,7 +25,7 @@ export const appRoutes: Route[] = [
         const router = inject(Router);
 
         if (favLang) {
-          if (window !== undefined) {
+          if (typeof window !== undefined) {
             router.navigate([`/${favLang}`]);
           } else {
             response?.redirect(301, `/${favLang}`);
@@ -38,7 +38,7 @@ export const appRoutes: Route[] = [
         if (
           translate.getAvailableLangs().some((lang) => lang === browserLang)
         ) {
-          if (window !== undefined) {
+          if (typeof window !== undefined) {
             router.navigate([`/${browserLang}`]);
           } else {
             response?.redirect(301, `/${browserLang}`);

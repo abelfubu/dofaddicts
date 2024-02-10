@@ -4,15 +4,22 @@ import { Component } from '@angular/core';
   selector: 'app-buy-me-coffee',
   standalone: true,
   template: `
-    <a href="https://www.buymeacoffee.com/abelfubu" target="_blank" class="bmc-link">
-      <img src="./assets/img/bmc-button.png" alt="Buy me a coffee button" />
+    <a
+      href="https://www.buymeacoffee.com/abelfubu"
+      target="_blank"
+      class="bmc-link"
+    >
+      <img
+        src="./assets/img/bmc-button.png"
+        alt="Buy me a coffee button"
+        [height]="42"
+      />
     </a>
   `,
   styles: [
     `
       :host {
         img {
-          height: 2.25rem;
           transform: translateY(3px);
         }
       }

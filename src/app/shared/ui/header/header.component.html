@@ -1,28 +1,50 @@
 <ng-container *ngIf="vm$ | async as vm">
   <header *transloco="let t">
     <nav>
-      <div [routerLink]="['/']" class="logo-container">
+      <div [routerLink]="['/']" class="logo-container mr-3">
         <img class="logo" src="./assets/img/logo.png" alt="Logo" />
-        <h3>Dofaddicts</h3>
+        <h3 class="m-0">Dofaddicts</h3>
       </div>
 
-      <a
+      <!-- HARVEST -->
+      <p-button
+        icon="pi pi-home"
+        [label]="t('header.harvest')"
+        [text]="true"
         [routerLink]="['/', vm.lang]"
-        [routerLinkActive]="'active'"
+        routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
-        >{{ t("header.harvest") }}</a
-      >
-      <a
-        *ngIf="vm.isLoggedIn"
+      />
+
+      <!-- EXCHANGE -->
+      <p-button
+        icon="pi pi-sort-alt"
+        [text]="true"
         [routerLink]="['/', vm.lang, 'exchange']"
-        [routerLinkActive]="'active'"
-        >{{ t("header.exchange") }}</a
-      >
+        routerLinkActive="active"
+        [label]="t('header.exchange')"
+      />
+
+      @if (vm.isLoggedIn) {
+        <p-button
+          (click)="onLogout()"
+          [text]="true"
+          label="Log Out"
+          icon="pi pi-sign-out"
+        />
+      } @else {
+        <p-button
+          [text]="true"
+          label="Log In"
+          [routerLink]="['/login']"
+          [queryParams]="{ from: 'harvest' }"
+          icon="pi pi-sign-in"
+        />
+      }
     </nav>
-    <nav>
+    <nav class="gap-3">
       <ng-container *ngIf="vm.email">
         <img
-          [mat-menu-trigger-for]="profile"
           class="avatar"
           [title]="vm.email"
           *ngIf="vm.picture; else emailAvatar"
@@ -30,81 +52,32 @@
           alt="User Picture"
         />
         <ng-template #emailAvatar>
-          <div class="email-avatar" [mat-menu-trigger-for]="profile">
+          <div class="email-avatar">
             {{ vm.email.at(0) }}
           </div>
         </ng-template>
-      </ng-container>
-      <mat-menu #profile="matMenu">
-        <button mat-menu-item (click)="onLogout()">
-          <div class="language-flag">
-            <span class="material-symbols-outlined">logout</span>
-            Log Out
-          </div>
-        </button>
-        <button mat-menu-item>
-          <div class="language-flag" [routerLink]="['/', vm.lang, 'profile']">
-            <span class="material-symbols-outlined">settings</span>
-            Profile
-          </div>
-        </button>
-      </mat-menu>
 
-      <app-button
-        *ngIf="!vm.isLoggedIn"
-        [routerLink]="['/login']"
-        [queryParams]="{ from: 'harvest' }"
-      >
-        Log In
-      </app-button>
-
-      <div>
-        <app-button
-          (click)="languageSelectorVisible.set(!languageSelectorVisible())"
-        >
-          <div class="language-flag">
-            <img
-              src="./assets/flags/{{ selectedLanguage() }}.png"
-              alt="Language Flag"
-              width="24"
-              height="24"
-            />
-            {{ selectedLanguage() | uppercase }}
-          </div>
-        </app-button>
-        <app-language-selector
-          [visible]="languageSelectorVisible()"
-          [path]="vm.path"
-          [currentLang]="selectedLanguage()"
-          [languages]="vm.languages"
-          (langChange)="onLangChange($event)"
+        <!-- PROFILE -->
+        <p-button
+          [text]="true"
+          label="Profile"
+          icon="pi pi-user"
+          [routerLink]="['/', vm.lang, 'profile']"
         />
-      </div>
-      <!-- <mat-menu #menu="matMenu">
-        <a
-          *ngFor="let language of vm.languages"
-          mat-menu-item
-          [routerLink]="['/', language, vm.path]"
-          (click)="onLangChange(language)"
-        >
-          <div class="language-flag">
-            <img
-              src="./assets/flags/{{ language }}.png"
-              alt="Language Flag"
-              width="24"
-              height="24"
-            />
-            {{ language | uppercase }}
-          </div>
-        </a>
-      </mat-menu> -->
+      </ng-container>
+
       <app-buy-me-coffee />
+
+      <app-language-selector
+        [currentLang]="selectedLanguage()"
+        [languages]="vm.languages"
+        (langChange)="onLangChange($event)"
+      />
     </nav>
   </header>
-  <mat-progress-bar
-    style="position: fixed; top: 0; left: 0"
-    *ngIf="store.loading$ | async"
-    mode="indeterminate"
-    [color]="'accent'"
-  />
+  @if (store.loading$ | async) {
+    <div class="absolute top-50 left-50">
+      <p-progressSpinner styleClass="w-8rem h-8rem" />
+    </div>
+  }
 </ng-container>

@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { GlobalStore } from 'src/app/shared/store/global.store';
-import { ButtonComponent } from 'src/app/shared/ui/button/button.component';
-import { InputComponent } from 'src/app/shared/ui/input/input.component';
 import { AuthProvider } from '../../shared/models/auth-provider';
 import { GOOGLE_BUTTON_CONFIG } from './login-data';
 
@@ -18,10 +18,37 @@ declare var google: GoogleAuth;
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, InputComponent, ButtonComponent, RouterModule],
+  imports: [ButtonModule, RouterModule, InputTextModule, ReactiveFormsModule],
+  template: `
+    <div class="image"></div>
+    <main>
+      <a [routerLink]="['/']">
+        <img src="./assets/img/logo.png" alt="Logo" />
+      </a>
+      <h1>Log In</h1>
+      <div #googleButton class="google-button"></div>
+      <p>Or</p>
+      <hr />
+      <form [formGroup]="form" (ngSubmit)="onLoginSubmit()">
+        <input
+          pInputText
+          type="email"
+          formControlName="email"
+          placeholder="example@email.com"
+        />
+        <input pInputText type="password" formControlName="password" />
+        <p-button
+          label="Sign In"
+          icon="pi pi-sign-in"
+          [disabled]="form.invalid"
+          [outlined]="true"
+          styleClass="w-12 text-center"
+        ></p-button>
+      </form>
+    </main>
+  `,
 })
 export class LoginComponent {
   @ViewChild('googleButton', { read: ElementRef, static: true })

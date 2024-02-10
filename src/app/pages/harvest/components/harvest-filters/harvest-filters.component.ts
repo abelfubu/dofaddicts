@@ -1,15 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, InjectionToken, Output } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLinkWithHref } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
-import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
+import { TranslocoDirective, TranslocoService } from '@ngneat/transloco';
 import { HarvestStepModalComponent } from '@pages/harvest/components/harvest-filters/harvest-step-modal/harvest-step-modal.component';
 import { ChartComponent } from '@shared/chart/chart.component';
 import { ChartSlice } from '@shared/chart/chart.model';
-import { ButtonComponent } from '@shared/ui/button/button.component';
 import { InputComponent } from '@shared/ui/input/input.component';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogService } from 'primeng/dynamicdialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import {
   combineLatest,
   debounceTime,
@@ -19,6 +22,7 @@ import {
   map,
   Observable,
   switchMap,
+  tap,
 } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { GlobalStore } from '../../../../shared/store/global.store';
@@ -32,9 +36,9 @@ export const enum HarvestSelection {
   ARCHIS = 'archis',
 }
 
-export const HARVEST_FILTERS_VM = new InjectionToken<Observable<HarvestFiltersVM>>(
-  'HARVEST_FILTERS_VM',
-);
+export const HARVEST_FILTERS_VM = new InjectionToken<
+  Observable<HarvestFiltersVM>
+>('HARVEST_FILTERS_VM');
 
 interface HarvestFiltersVM {
   statistics: ChartSlice[][];
@@ -49,14 +53,18 @@ interface HarvestFiltersVM {
   styleUrls: ['./harvest-filters.component.scss'],
   standalone: true,
   imports: [
+    ButtonModule,
     CommonModule,
-    ReactiveFormsModule,
     ChartComponent,
     InputComponent,
-    ButtonComponent,
+    CheckboxModule,
+    InputTextModule,
+    TranslocoDirective,
+    FormsModule,
     RouterLinkWithHref,
+    SelectButtonModule,
+    ReactiveFormsModule,
     HarvestStepModalComponent,
-    TranslocoModule,
   ],
   providers: [
     {
@@ -81,15 +89,19 @@ interface HarvestFiltersVM {
   ],
 })
 export class HarvestFiltersComponent {
+  value = '';
   search = new FormControl('');
+  filters = new FormControl(['showCaptured', 'monsters', 'bosses', 'archis']);
 
-  @Output() changed = this.search.valueChanges.pipe(debounceTime(400), map(String));
+  @Output() changed = this.search.valueChanges.pipe(
+    debounceTime(400),
+    map(String),
+  );
 
   private readonly toast = inject(HotToastService);
   private readonly router = inject(Router);
-  private readonly formBuilder = inject(FormBuilder);
   private readonly harvestStore = inject(HarvestStore);
-  private readonly matDialog = inject(MatDialog);
+  private readonly dialog = inject(DialogService);
   private readonly translate = inject(TranslocoService);
   private readonly route = inject(ActivatedRoute);
   private readonly globalStore = inject(GlobalStore);
@@ -97,32 +109,31 @@ export class HarvestFiltersComponent {
   protected readonly vm$ = inject(HARVEST_FILTERS_VM);
   protected readonly isShared = this.route.snapshot.params['id'];
 
-  form = this.formBuilder.nonNullable.group({
-    showCaptured: [true],
-    showRepeatedOnly: [false],
-    monsters: [true],
-    bosses: [true],
-    archis: [true],
-  });
-
   ngOnInit(): void {
-    this.harvestStore.filter(this.form.valueChanges);
+    this.harvestStore.filter(
+      this.filters.valueChanges.pipe(
+        map((value) => ({
+          showCaptured: value?.includes('showCaptured'),
+          showRepeatedOnly: value?.includes('showRepeatedOnly'),
+          monsters: value?.includes('monsters'),
+          bosses: value?.includes('bosses'),
+          archis: value?.includes('archis'),
+        })),
+        tap(console.log),
+      ),
+    );
 
     if (!this.route.snapshot.queryParamMap.has('selection')) return;
 
     const selection = this.route.snapshot.queryParamMap.get('selection');
 
-    this.form.setValue({
-      showCaptured: true,
-      showRepeatedOnly: true,
-      monsters: selection === HarvestSelection.MONSTERS,
-      bosses: selection === HarvestSelection.BOSSES,
-      archis: selection === HarvestSelection.ARCHIS,
-    });
+    this.filters.setValue(
+      ['showCaptured', 'showRepeatedOnly'].concat(selection!),
+    );
   }
 
   onClearFilters(): void {
-    this.form.setValue(DEFAULT_FILTERS);
+    this.filters.setValue(DEFAULT_FILTERS);
     this.search.setValue('');
   }
 
@@ -156,10 +167,12 @@ export class HarvestFiltersComponent {
 
   onStepCompleted(steps: boolean[]): void {
     this.harvestStore.completeSteps(
-      this.matDialog
-        .open(HarvestStepModalComponent, { data: steps, panelClass: 'background' })
-        .afterClosed()
-        .pipe(filter(Boolean)),
+      this.dialog
+        .open(HarvestStepModalComponent, {
+          data: steps,
+          header: this.translate.translate('home.steps'),
+        })
+        .onClose.pipe(filter(Boolean)),
     );
   }
 

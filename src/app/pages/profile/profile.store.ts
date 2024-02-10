@@ -1,20 +1,28 @@
-import { Injectable, inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { TranslocoService } from '@ngneat/transloco';
-import { ComponentStore, tapResponse } from '@ngrx/component-store';
-import { ProfileDataResponse } from '@pages/profile/models/profile-data-response.model';
+import { tapResponse } from '@ngrx/component-store';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { ProfileDataService } from '@pages/profile/services/profile-data.service';
+import { Server } from '@prisma/client';
 import { User } from '@shared/models/user';
-import { Observable } from 'rxjs';
+import { pipe } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 export interface ProfileState {
   profile: User | null;
-  servers: any[];
+  servers: Server[];
 }
 
-const DEFAULT_STATE: ProfileState = {
+const initialState: ProfileState = {
   profile: {
     email: '',
     discord: '',
@@ -26,56 +34,52 @@ const DEFAULT_STATE: ProfileState = {
   servers: [],
 };
 
-@Injectable()
-export class ProfileStore extends ComponentStore<ProfileState> {
-  private readonly toast = inject(HotToastService);
-  private readonly dataService = inject(ProfileDataService);
-  private readonly router = inject(Router);
-  private readonly translate = inject(TranslocoService);
-
-  constructor() {
-    super(DEFAULT_STATE);
-  }
-
-  readonly vm$ = this.select((state) => state);
-
-  readonly getData = this.effect((trigger$) =>
-    trigger$.pipe(
-      switchMap(() =>
-        this.dataService.get().pipe(
-          tapResponse(
-            (response) => this.setData(response),
-            (error) => console.log(error),
+export const ProfileStore = signalStore(
+  { providedIn: 'root' },
+  withState(initialState),
+  withComputed((store) => ({
+    profile: computed(() => store.profile()),
+    servers: computed(() => store.servers()),
+  })),
+  withMethods(
+    (
+      store,
+      router = inject(Router),
+      toast = inject(HotToastService),
+      translate = inject(TranslocoService),
+      service = inject(ProfileDataService),
+    ) => ({
+      updateProfile(profile) {
+        patchState(store, { profile });
+      },
+      getData: rxMethod<void>(
+        pipe(
+          switchMap(() =>
+            service.get().pipe(
+              tapResponse(
+                ({ profile, servers }) =>
+                  patchState(store, { profile, servers }),
+                (error) => toast.error(String(error)),
+              ),
+            ),
           ),
         ),
       ),
-    ),
-  );
-
-  readonly update = this.effect((profile$: Observable<Partial<User>>) =>
-    profile$.pipe(
-      switchMap((profile) =>
-        this.dataService.put(profile).pipe(
-          tapResponse(
-            () => {
-              this.router.navigate(['/', this.translate.getActiveLang()]);
-              this.toast.success('Profile updated');
-            },
-            (error) => console.log(error),
+      update: rxMethod(
+        pipe(
+          switchMap((profile) =>
+            service.put(profile).pipe(
+              tapResponse(
+                () => {
+                  router.navigate(['/', translate.getActiveLang()]);
+                  toast.success('Profile updated');
+                },
+                (error) => toast.error(String(error)),
+              ),
+            ),
           ),
         ),
       ),
-    ),
-  );
-
-  readonly setData = this.updater((state, response: ProfileDataResponse) => ({
-    ...state,
-    profile: response.profile,
-    servers: response.servers,
-  }));
-}
-
-// SwitchMap cancels previous requests and only perform the last one
-// MergeMap performs all requests in parallel
-// ConcatMap Performs all requests in sequence
-// ExhaustMap cancels last requests until first request is finished
+    }),
+  ),
+);

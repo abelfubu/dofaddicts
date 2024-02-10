@@ -19,7 +19,7 @@
 
         <div class="cell">
           <small>Discord Id</small>
-          <h3>{{ vm.user.discord || '' }}</h3>
+          <h3>{{ vm.user.discord || "" }}</h3>
         </div>
 
         <div class="cell">
@@ -27,57 +27,61 @@
           <h3>{{ vm.user.server }}</h3>
         </div>
 
-        <app-button (click)="onBack()">{{ t('home.back') }}</app-button>
+        <p-button
+          [text]="true"
+          (click)="onBack()"
+          [label]="t('home.back')"
+          icon="pi pi-arrow-left"
+        />
       </div>
     </div>
 
-    <form [formGroup]="form">
-      <div class="search-box">
-        <app-input
-          type="text"
-          [control]="search"
-          [placeholder]="t('home.search')"
-          style="flex-basis: 500px"
-        >
-        </app-input>
+    <div class="search-box">
+      <input
+        type="text"
+        pInputText
+        [formControl]="search"
+        [placeholder]="t('home.search')"
+        style="flex-basis: 500px"
+      />
 
-        <app-button (click)="onClearFilters()">{{ t('home.reset') }}</app-button>
+      <p-button
+        (click)="onClearFilters()"
+        [label]="t('home.reset')"
+        [outlined]="true"
+      />
 
-        <app-button *ngIf="!isShared" (click)="onShareHarvest(vm.harvestId)">{{
-          t('home.share')
-        }}</app-button>
+      @if (!isShared) {
+        <p-button
+          [outlined]="true"
+          (click)="onShareHarvest(vm.harvestId)"
+          [label]="t('home.share')"
+        />
+      } @else {
+        <p-button
+          [outlined]="true"
+          (click)="onStepCompleted(vm.steps)"
+          [label]="t('home.complete')"
+        />
+      }
+    </div>
 
-        <app-button *ngIf="!isShared" (click)="onStepCompleted(vm.steps)">{{
-          t('home.complete')
-        }}</app-button>
+    <div class="controls-box">
+      <div class="card flex justify-content-center">
+        <p-selectButton
+          [options]="[
+            { name: 'Mostrar Capturados', value: 'showCaptured' },
+            { name: 'Mostrar repetidos', value: 'showRepeatedOnly' },
+            { name: 'Monsters', value: 'monsters' },
+            { name: 'Bosses', value: 'bosses' },
+            { name: 'Archis', value: 'archis' }
+          ]"
+          [formControl]="filters"
+          [multiple]="true"
+          optionLabel="name"
+          optionValue="value"
+        ></p-selectButton>
       </div>
-
-      <div class="controls-box">
-        <div class="control">
-          <input type="checkbox" formControlName="showCaptured" id="completed" />
-          <label for="completed">{{ t('home.captured') }}</label>
-        </div>
-
-        <div class="control">
-          <input type="checkbox" formControlName="showRepeatedOnly" id="repeated" />
-          <label for="repeated">{{ t('home.repeated') }}</label>
-        </div>
-
-        <div class="control">
-          <input type="checkbox" formControlName="monsters" id="monsters" />
-          <label for="monsters">{{ t('home.monsters') }}</label>
-        </div>
-
-        <div class="control">
-          <input type="checkbox" formControlName="bosses" id="bosses" />
-          <label for="bosses">{{ t('home.bosses') }}</label>
-        </div>
-
-        <div class="control">
-          <input type="checkbox" formControlName="archis" id="archis" />
-          <label for="archis">{{ t('home.archis') }}</label>
-        </div>
-      </div>
-    </form>
+    </div>
   </ng-container>
 </ng-container>

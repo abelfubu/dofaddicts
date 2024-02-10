@@ -1,52 +1,49 @@
-import { JsonPipe } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Output,
-  computed,
-  input,
-} from '@angular/core';
+import { JsonPipe, UpperCasePipe } from '@angular/common';
+import { Component, EventEmitter, Output, input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { SelectComponent } from '../select/select.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   standalone: true,
   selector: 'app-language-selector',
-  imports: [RouterLink, SelectComponent, JsonPipe],
+  imports: [RouterLink, JsonPipe, DropdownModule, FormsModule, UpperCasePipe],
   template: `
-    <div class="language-selector" [class.hidden]="!visible()">
-      @for (link of links(); track link.label) {
-        <a
-          [routerLink]="route() ? ['/', link.lang, route()] : ['/', link.lang]"
-          (click)="langChange.emit(link.lang)"
-        >
+    <p-dropdown
+      [options]="languages()"
+      [ngModel]="currentLang()"
+      (onChange)="langChange.emit($event.value)"
+      class="p-inputtext-sm"
+    >
+      <ng-template pTemplate="selectedItem">
+        @if (currentLang()) {
+          <div class="flex align-items-center gap-2">
+            <img
+              src="./assets/flags/{{ currentLang() }}.png"
+              alt="Language Flag"
+              width="24"
+              height="24"
+            />
+            <span>{{ currentLang() | uppercase }}</span>
+          </div>
+        }
+      </ng-template>
+      <ng-template let-lang pTemplate="item">
+        <div class="flex align-items-center gap-2">
           <img
-            src="./assets/flags/{{ link.lang }}.png"
+            src="assets/flags/{{ lang.value }}.png"
             alt="Language Flag"
             width="24"
             height="24"
           />
-          <span>{{ link.label }}</span>
-        </a>
-      }
-    </div>
+          <div>{{ lang.label }}</div>
+        </div>
+      </ng-template>
+    </p-dropdown>
   `,
-  styleUrl: `./language-selector.component.scss`,
 })
 export class LanguageSelectorComponent {
   @Output() langChange = new EventEmitter<string>();
-  visible = input(false);
-  path = input.required<string[]>();
   languages = input.required<string[]>();
   currentLang = input.required<string>();
-
-  route = computed(() => (this.path().length ? this.path().join('/') : ''));
-
-  links = computed(() =>
-    this.languages().map((lang) => ({
-      lang,
-      label: lang.toUpperCase(),
-      link: ['/', lang, this.path()],
-    })),
-  );
 }

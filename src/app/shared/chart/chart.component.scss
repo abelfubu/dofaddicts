@@ -1,6 +1,13 @@
 :host {
   height: 225px;
 }
+
+h1,
+p {
+  padding: 0;
+  margin: 0;
+}
+
 svg {
   overflow: visible;
   width: 100%;
