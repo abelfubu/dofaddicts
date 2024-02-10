@@ -7,18 +7,24 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { Observable, map, switchMap } from 'rxjs';
 
-import { MatMenuModule } from '@angular/material/menu';
 import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
 
+import { FormsModule } from '@angular/forms';
 import { environment } from '@environments/environment';
 import { CookieService } from 'ngx-cookie-service';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
 import { GlobalStore } from '../../store/global.store';
-import { ButtonComponent } from '../button/button.component';
 import { BuyMeACoffeeComponent } from '../buy-me-coffee.component';
 import { LanguageSelectorComponent } from '../language-selector/language-selector.component';
 
@@ -40,10 +46,11 @@ const HEADER_VM = new InjectionToken<Observable<HeaderViewModel>>('HEADER_VM');
   standalone: true,
   imports: [
     NgForOf,
-    CommonModule,
     RouterLink,
-    MatMenuModule,
-    ButtonComponent,
+    FormsModule,
+    CommonModule,
+    ButtonModule,
+    DropdownModule,
     TranslocoModule,
     RouterLinkActive,
     BuyMeACoffeeComponent,
@@ -64,7 +71,10 @@ const HEADER_VM = new InjectionToken<Observable<HeaderViewModel>>('HEADER_VM');
               map((user) => ({
                 ...user,
                 lang: translate.getActiveLang(),
-                languages: translate.getAvailableLangs(),
+                languages: translate.getAvailableLangs().map((lang) => ({
+                  label: String(lang).toUpperCase(),
+                  value: lang,
+                })),
                 path: route.snapshot.url.map((u) => u.path),
               })),
             ),
@@ -81,6 +91,7 @@ export class HeaderComponent {
   protected readonly translate = inject(TranslocoService);
   protected readonly store = inject(GlobalStore);
   private readonly cookieService = inject(CookieService);
+  private readonly router = inject(Router);
 
   selectedLanguage = signal<string>(this.translate.getActiveLang());
   languageSelectorVisible = signal(false);
@@ -89,6 +100,7 @@ export class HeaderComponent {
     this.languageSelectorVisible.set(false);
     this.cookieService.set(environment.favLangKey, lang);
     this.selectedLanguage.set(lang);
+    this.router.navigate([`/${lang}`]);
   }
 
   onLogout(): void {

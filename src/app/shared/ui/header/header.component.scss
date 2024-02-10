@@ -1,4 +1,4 @@
-@use 'colors' as c;
+@use "colors" as c;
 
 header {
   display: flex;
@@ -14,7 +14,7 @@ header {
   h3 {
     flex: 1 0 0;
     margin-left: 0.3rem;
-    font-family: 'Delicious Handrawn', cursive;
+    font-family: "Delicious Handrawn", cursive;
     font-size: 2rem;
   }
 
@@ -31,7 +31,8 @@ header {
     }
 
     .active {
-      color: map-get($map: c.$primary, $key: 400);
+      background-color: var(--primary-900);
+      border-radius: 4px;
     }
 
     a {

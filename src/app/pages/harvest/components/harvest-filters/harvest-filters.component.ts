@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, InjectionToken, Output } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterLinkWithHref } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
@@ -10,6 +9,7 @@ import { ChartComponent } from '@shared/chart/chart.component';
 import { ChartSlice } from '@shared/chart/chart.model';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import { InputComponent } from '@shared/ui/input/input.component';
+import { DialogService } from 'primeng/dynamicdialog';
 import {
   combineLatest,
   debounceTime,
@@ -92,7 +92,7 @@ export class HarvestFiltersComponent {
   private readonly router = inject(Router);
   private readonly formBuilder = inject(FormBuilder);
   private readonly harvestStore = inject(HarvestStore);
-  private readonly matDialog = inject(MatDialog);
+  private readonly dialog = inject(DialogService);
   private readonly translate = inject(TranslocoService);
   private readonly route = inject(ActivatedRoute);
   private readonly globalStore = inject(GlobalStore);
@@ -159,13 +159,12 @@ export class HarvestFiltersComponent {
 
   onStepCompleted(steps: boolean[]): void {
     this.harvestStore.completeSteps(
-      this.matDialog
+      this.dialog
         .open(HarvestStepModalComponent, {
           data: steps,
-          panelClass: 'background',
+          header: this.translate.translate('home.steps'),
         })
-        .afterClosed()
-        .pipe(filter(Boolean)),
+        .onClose.pipe(filter(Boolean)),
     );
   }
 

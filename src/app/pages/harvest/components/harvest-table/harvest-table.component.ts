@@ -1,11 +1,9 @@
 import { NgForOf, NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LazyImagesDirective } from '@shared/lazy-images.directive';
 
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { Harvest } from '../../models/harvest';
-import { HarvestStepModalComponent } from '../harvest-filters/harvest-step-modal/harvest-step-modal.component';
 import { HarvestItemComponent } from './harvest-item/harvest-item.component';
 import { HarvestTableHeaderComponent } from './harvest-table-header/harvest-table-header.component';
 
@@ -17,7 +15,6 @@ import { HarvestTableHeaderComponent } from './harvest-table-header/harvest-tabl
   imports: [
     NgIf,
     NgForOf,
-    MatDialogModule,
     LazyImagesDirective,
     HarvestItemComponent,
     InfiniteScrollModule,
@@ -27,12 +24,4 @@ import { HarvestTableHeaderComponent } from './harvest-table-header/harvest-tabl
 export class HarvestTableComponent {
   @Input() data!: Harvest[] | null;
   @Output() scrolled = new EventEmitter();
-
-  private readonly matDialog = inject(MatDialog);
-
-  openFilter() {
-    this.matDialog.open(HarvestStepModalComponent, {
-      panelClass: 'background',
-    });
-  }
 }

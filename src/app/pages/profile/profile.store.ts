@@ -3,15 +3,15 @@ import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { TranslocoService } from '@ngneat/transloco';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
-import { ProfileDataResponse } from '@pages/profile/models/profile-data-response.model';
 import { ProfileDataService } from '@pages/profile/services/profile-data.service';
+import { Server } from '@prisma/client';
 import { User } from '@shared/models/user';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 export interface ProfileState {
   profile: User | null;
-  servers: any[];
+  servers: Server[];
 }
 
 const DEFAULT_STATE: ProfileState = {
@@ -44,8 +44,8 @@ export class ProfileStore extends ComponentStore<ProfileState> {
       switchMap(() =>
         this.dataService.get().pipe(
           tapResponse(
-            (response) => this.setData(response),
-            (error) => console.log(error),
+            ({ profile, servers }) => this.patchState({ profile, servers }),
+            (error) => this.toast.error(String(error)),
           ),
         ),
       ),
@@ -61,18 +61,12 @@ export class ProfileStore extends ComponentStore<ProfileState> {
               this.router.navigate(['/', this.translate.getActiveLang()]);
               this.toast.success('Profile updated');
             },
-            (error) => console.log(error),
+            (error) => this.toast.error(String(error)),
           ),
         ),
       ),
     ),
   );
-
-  readonly setData = this.updater((state, response: ProfileDataResponse) => ({
-    ...state,
-    profile: response.profile,
-    servers: response.servers,
-  }));
 }
 
 // SwitchMap cancels previous requests and only perform the last one

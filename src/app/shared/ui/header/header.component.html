@@ -6,23 +6,36 @@
         <h3 class="m-0">Dofaddicts</h3>
       </div>
 
-      <a
+      <p-button
+        [text]="true"
         [routerLink]="['/', vm.lang]"
-        [routerLinkActive]="'active'"
+        routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
-        >{{ t("header.harvest") }}</a
+        >{{ t("header.harvest") }}</p-button
       >
-      <a
+      <p-button
+        [text]="true"
         *ngIf="vm.isLoggedIn"
         [routerLink]="['/', vm.lang, 'exchange']"
-        [routerLinkActive]="'active'"
-        >{{ t("header.exchange") }}</a
+        routerLinkActive="active"
+        >{{ t("header.exchange") }}</p-button
       >
     </nav>
     <nav>
       <ng-container *ngIf="vm.email">
+        <p-button (click)="onLogout()" [text]="true">
+          <div class="language-flag">
+            <span class="material-symbols-outlined">logout</span>
+            Log Out
+          </div>
+        </p-button>
+        <p-button [text]="true">
+          <div class="language-flag" [routerLink]="['/', vm.lang, 'profile']">
+            <span class="material-symbols-outlined">settings</span>
+            Profile
+          </div>
+        </p-button>
         <img
-          [mat-menu-trigger-for]="profile"
           class="avatar"
           [title]="vm.email"
           *ngIf="vm.picture; else emailAvatar"
@@ -30,74 +43,26 @@
           alt="User Picture"
         />
         <ng-template #emailAvatar>
-          <div class="email-avatar" [mat-menu-trigger-for]="profile">
+          <div class="email-avatar">
             {{ vm.email.at(0) }}
           </div>
         </ng-template>
       </ng-container>
-      <mat-menu #profile="matMenu">
-        <button mat-menu-item (click)="onLogout()">
-          <div class="language-flag">
-            <span class="material-symbols-outlined">logout</span>
-            Log Out
-          </div>
-        </button>
-        <button mat-menu-item>
-          <div class="language-flag" [routerLink]="['/', vm.lang, 'profile']">
-            <span class="material-symbols-outlined">settings</span>
-            Profile
-          </div>
-        </button>
-      </mat-menu>
 
-      <app-button
-        *ngIf="!vm.isLoggedIn"
-        [routerLink]="['/login']"
-        [queryParams]="{ from: 'harvest' }"
-      >
-        Log In
-      </app-button>
+      @if (!vm.isLoggedIn) {
+        <p-button
+          [text]="true"
+          [routerLink]="['/login']"
+          [queryParams]="{ from: 'harvest' }"
+          >Log In</p-button
+        >
+      }
 
-      <div>
-        <app-button
-          (click)="languageSelectorVisible.set(!languageSelectorVisible())"
-        >
-          <div class="language-flag">
-            <img
-              src="./assets/flags/{{ selectedLanguage() }}.png"
-              alt="Language Flag"
-              width="24"
-              height="24"
-            />
-            {{ selectedLanguage() | uppercase }}
-          </div>
-        </app-button>
-        <app-language-selector
-          [visible]="languageSelectorVisible()"
-          [path]="vm.path"
-          [currentLang]="selectedLanguage()"
-          [languages]="vm.languages"
-          (langChange)="onLangChange($event)"
-        />
-      </div>
-      <!-- <mat-menu #menu="matMenu">
-        <a
-          *ngFor="let language of vm.languages"
-          mat-menu-item
-          [routerLink]="['/', language, vm.path]"
-          (click)="onLangChange(language)"
-        >
-          <div class="language-flag">
-            <img
-              src="./assets/flags/{{ language }}.png"
-              alt="Language Flag"
-              width="24"
-              height="24"
-            />
-            {{ language | uppercase }}
-          </div>
-        </a>
-      </mat-menu> -->
+      <app-language-selector
+        [currentLang]="selectedLanguage()"
+        [languages]="vm.languages"
+        (langChange)="onLangChange($event)"
+      />
       <app-buy-me-coffee />
     </nav>
   </header>

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, InjectionToken, OnInit } from '@angular/core';
-import { MatDialogModule } from '@angular/material/dialog';
 import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
@@ -27,7 +26,6 @@ export const EDITABLE = new InjectionToken<Observable<boolean>>('EDITABLE');
   imports: [
     CommonModule,
     RouterModule,
-    MatDialogModule,
     HeaderComponent,
     NgxJsonLdModule,
     TranslocoModule,

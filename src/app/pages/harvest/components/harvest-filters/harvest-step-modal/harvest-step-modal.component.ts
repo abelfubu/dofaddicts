@@ -20,7 +20,7 @@ export class HarvestStepModalComponent {
   steps!: boolean[];
 
   private readonly formBuilder = inject(FormBuilder);
-  private readonly dialogRef = inject(DynamicDialogRef);
+  private readonly dialogRef = inject(DynamicDialogRef, { optional: true });
   private readonly config = inject(DynamicDialogConfig);
 
   ngOnInit(): void {
@@ -33,11 +33,11 @@ export class HarvestStepModalComponent {
   }
 
   applySteps(): void {
-    this.dialogRef.close(this.form.value);
+    this.dialogRef?.close(this.form.value);
   }
 
   closeModal(): void {
-    this.dialogRef.close();
+    this.dialogRef?.close();
   }
 
   private initializeStepsForm(steps: boolean[]): void {

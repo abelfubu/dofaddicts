@@ -2,28 +2,26 @@ import { NgForOf } from '@angular/common';
 import { Component, OnInit, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import { ProfileStore } from '@pages/profile/profile.store';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import { HeaderComponent } from '@shared/ui/header/header.component';
 import { InputComponent } from '@shared/ui/input/input.component';
-import { SelectComponent } from '@shared/ui/select/select.component';
+import { DropdownModule } from 'primeng/dropdown';
 import { map } from 'rxjs';
 
 @Component({
   standalone: true,
   imports: [
-    ReactiveFormsModule,
-    InputComponent,
     NgForOf,
-    ButtonComponent,
-    MatMenuModule,
-    HeaderComponent,
-    SelectComponent,
     RouterLink,
+    InputComponent,
+    DropdownModule,
+    ButtonComponent,
+    HeaderComponent,
     TranslocoModule,
+    ReactiveFormsModule,
   ],
   providers: [ProfileStore],
   template: `
@@ -37,9 +35,11 @@ import { map } from 'rxjs';
       <label>Discord</label>
       <app-input [control]="form.controls.discord"></app-input>
       <label>{{ t('profile.server') }}</label>
-      <app-select [control]="form.controls.server" [options]="vm()?.servers || []" />
+      <p-dropdown [options]="vm()?.servers || []" formControlName="server" />
       <div class="actions">
-        <app-button [disabled]="form.invalid">{{ t('profile.submit') }}</app-button>
+        <app-button [disabled]="form.invalid">{{
+          t('profile.submit')
+        }}</app-button>
         <app-button [routerLink]="['/']">{{ t('profile.back') }}</app-button>
       </div>
     </form>
