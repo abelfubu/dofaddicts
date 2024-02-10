@@ -7,8 +7,8 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { Observable, map, switchMap } from 'rxjs';
 
@@ -46,8 +46,8 @@ const HEADER_VM = new InjectionToken<Observable<HeaderViewModel>>('HEADER_VM');
     ButtonComponent,
     TranslocoModule,
     RouterLinkActive,
-    MatProgressBarModule,
     BuyMeACoffeeComponent,
+    ProgressSpinnerModule,
     LanguageSelectorComponent,
   ],
   providers: [

@@ -58,6 +58,7 @@ p-component {
 
 body {
   accent-color: map-get($map: c.$primary, $key: 500);
+  background-color: var(--surface-0);
   color: #ffffffaa;
   max-width: 95vw;
   margin: auto;

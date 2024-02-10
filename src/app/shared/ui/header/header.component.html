@@ -101,10 +101,9 @@
       <app-buy-me-coffee />
     </nav>
   </header>
-  <mat-progress-bar
-    style="position: fixed; top: 0; left: 0"
-    *ngIf="store.loading$ | async"
-    mode="indeterminate"
-    [color]="'accent'"
-  />
+  @if (store.loading$ | async) {
+    <div class="absolute top-50 left-50">
+      <p-progressSpinner styleClass="w-8rem h-8rem" />
+    </div>
+  }
 </ng-container>
