@@ -98,11 +98,11 @@ export class HarvestStore extends ComponentStore<HarvestData> {
               console.log(error);
               this.toast.error('Error en el servidor', { icon: '⚠️' });
               if (id) this.router.navigate(['/']);
-            }
-          )
-        )
-      )
-    )
+            },
+          ),
+        ),
+      ),
+    ),
   );
 
   readonly completeSteps = this.effect<Record<number, boolean>>((steps$) =>
@@ -113,22 +113,24 @@ export class HarvestStore extends ComponentStore<HarvestData> {
             (data) => this.setData(data),
             (error) => {
               this.toast.error(String(error), { icon: '⚠️' });
-            }
-          )
-        )
-      )
-    )
+            },
+          ),
+        ),
+      ),
+    ),
   );
 
   readonly updateData = this.effect((trigger$: Observable<UserHarvest>) =>
     trigger$.pipe(
       switchMap((item) =>
-        this.globalStore.isLoggedIn$.pipe(map((logged) => ({ logged, item })))
+        this.globalStore.isLoggedIn$.pipe(map((logged) => ({ logged, item }))),
       ),
       tap(
         ({ logged }) =>
           !logged &&
-          this.router.navigate(['/login'], { queryParams: { from: 'harvest' } })
+          this.router.navigate(['/login'], {
+            queryParams: { from: 'harvest' },
+          }),
       ),
       filter(Boolean),
       map(({ item }) => ({
@@ -144,10 +146,10 @@ export class HarvestStore extends ComponentStore<HarvestData> {
               this.update(data.itemBefore!);
               this.toast.error('Algo ha ido mal...');
               return EMPTY;
-            })
-          )
-      )
-    )
+            }),
+          ),
+      ),
+    ),
   );
 
   readonly setData = this.updater(
@@ -174,7 +176,7 @@ export class HarvestStore extends ComponentStore<HarvestData> {
         harvestUser: user,
         statistics: this.calculateStatistics(translatedHarvest),
       };
-    }
+    },
   );
 
   readonly updateTranslation = this.updater(
@@ -190,14 +192,14 @@ export class HarvestStore extends ComponentStore<HarvestData> {
         harvest: state.harvest.map(callback),
         originalData: state.originalData.map(callback),
       };
-    }
+    },
   );
 
   readonly search = this.updater((state, search: string) => {
     const filters = { ...state.filters, search };
     const { dataSet, page, next, previous } = this.dhMygoliaDataset.getDataSet(
       state.originalData,
-      filters
+      filters,
     );
 
     return { ...state, filters, harvest: dataSet, page, next, previous };
@@ -209,18 +211,18 @@ export class HarvestStore extends ComponentStore<HarvestData> {
       const { dataSet, page, next, previous } =
         this.dhMygoliaDataset.getDataSet(state.originalData, filters);
       return { ...state, filters, harvest: dataSet, page, next, previous };
-    }
+    },
   );
 
-  readonly steps = this.updater((state, steps: Record<number, boolean>) => {
-    const filters = { ...state.filters, steps: Object.values(steps) };
-    const { dataSet, page, next, previous } = this.dhMygoliaDataset.getDataSet(
-      state.originalData,
-      filters
-    );
+  readonly filterBySteps = this.updater(
+    (state, steps: Record<number, boolean>) => {
+      const filters = { ...state.filters, steps: Object.values(steps) };
+      const { dataSet, page, next, previous } =
+        this.dhMygoliaDataset.getDataSet(state.originalData, filters);
 
-    return { ...state, filters, harvest: dataSet, page, next, previous };
-  });
+      return { ...state, filters, harvest: dataSet, page, next, previous };
+    },
+  );
 
   readonly update = this.updater((state, item: UserHarvest) => {
     const callback = (i: Harvest) => (i.id === item.id ? { ...i, ...item } : i);
@@ -241,7 +243,7 @@ export class HarvestStore extends ComponentStore<HarvestData> {
     const { dataSet, page, next, previous } = this.dhMygoliaDataset.getDataSet(
       state.originalData,
       state.filters,
-      state.next
+      state.next,
     );
 
     return {
@@ -263,7 +265,7 @@ export class HarvestStore extends ComponentStore<HarvestData> {
           { id: 1, amount, current, label: label, percent: percent, color: c1 },
           { id: 2, color: c2, percent: 100 - percent },
         ];
-      }
+      },
     );
   }
 }

@@ -8,14 +8,16 @@ import {
   ApplicationConfig,
   importProvidersFrom,
   inject,
+  isDevMode,
 } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { HotToastModule } from '@ngneat/hot-toast';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService, provideTransloco } from '@ngneat/transloco';
+import { DialogService } from 'primeng/dynamicdialog';
 import { TOAST_CONFIG } from './chore/config/toast.config';
 import { jwtInitalizer } from './chore/initializers/jwt.initializer';
-import { TranslocoRootModule } from './chore/modules/transloco-root.module';
+import { TranslocoHttpLoader } from './chore/modules/transloco-root.module';
 import { appRoutes } from './chore/routes/app.routes';
 import { WINDOW } from './chore/tokens/window.token';
 import { authInterceptor } from './shared/interceptors/auth.interceptor';
@@ -32,14 +34,23 @@ export function preloadUserLanguage() {
 
 export const config: ApplicationConfig = {
   providers: [
+    DialogService,
     provideHttpClient(
       withInterceptors([authInterceptor, loadingInterceptor]),
       withFetch(),
     ),
     provideRouter(appRoutes),
     provideAnimations(),
+    provideTransloco({
+      config: {
+        availableLangs: ['en', 'es', 'it', 'de', 'fr', 'pt'],
+        defaultLang: 'en',
+        reRenderOnLangChange: true,
+        prodMode: !isDevMode(),
+      },
+      loader: TranslocoHttpLoader,
+    }),
     importProvidersFrom([
-      TranslocoRootModule,
       HotToastModule.forRoot(TOAST_CONFIG),
       // ServiceWorkerModule.register('ngsw-worker.js', {
       //   enabled: environment.production,

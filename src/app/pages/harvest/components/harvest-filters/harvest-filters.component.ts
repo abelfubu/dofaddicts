@@ -32,9 +32,9 @@ export const enum HarvestSelection {
   ARCHIS = 'archis',
 }
 
-export const HARVEST_FILTERS_VM = new InjectionToken<Observable<HarvestFiltersVM>>(
-  'HARVEST_FILTERS_VM',
-);
+export const HARVEST_FILTERS_VM = new InjectionToken<
+  Observable<HarvestFiltersVM>
+>('HARVEST_FILTERS_VM');
 
 interface HarvestFiltersVM {
   statistics: ChartSlice[][];
@@ -83,7 +83,10 @@ interface HarvestFiltersVM {
 export class HarvestFiltersComponent {
   search = new FormControl('');
 
-  @Output() changed = this.search.valueChanges.pipe(debounceTime(400), map(String));
+  @Output() changed = this.search.valueChanges.pipe(
+    debounceTime(400),
+    map(String),
+  );
 
   private readonly toast = inject(HotToastService);
   private readonly router = inject(Router);
@@ -157,7 +160,10 @@ export class HarvestFiltersComponent {
   onStepCompleted(steps: boolean[]): void {
     this.harvestStore.completeSteps(
       this.matDialog
-        .open(HarvestStepModalComponent, { data: steps, panelClass: 'background' })
+        .open(HarvestStepModalComponent, {
+          data: steps,
+          panelClass: 'background',
+        })
         .afterClosed()
         .pipe(filter(Boolean)),
     );

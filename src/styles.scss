@@ -37,23 +37,27 @@ $dofus-cosecha-theme: mat.define-light-theme(
 @include mat.all-component-themes($dofus-cosecha-theme);
 
 :root {
-  --mat-menu-container-color: map-get($map: c.$dark, $key: 400);
+  --mat-menu-container-color: var(--surface-b);
   --mat-menu-item-label-text-color: #ffffffaa;
+  --primary-color: red;
 }
 
 * {
   font-family: "Open Sans", sans-serif;
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+
   --webkit-font-smoothing: antialiased;
   --moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
 }
 
+body,
+p-component {
+  font-family: "Open Sans", sans-serif;
+}
+
 body {
   accent-color: map-get($map: c.$primary, $key: 500);
-  background-color: map-get($map: c.$dark, $key: 400);
   color: #ffffffaa;
   max-width: 95vw;
   margin: auto;
@@ -96,11 +100,11 @@ input[type="checkbox"] {
 }
 
 .background .mat-mdc-dialog-container .mdc-dialog__surface {
-  background-color: map-get($map: c.$dark, $key: 400);
+  background-color: var(--surface-b);
 }
 
 .mat-mdc-menu-panel {
-  background-color: map-get($map: c.$dark, $key: 400);
+  background-color: var(--surface-b);
 }
 
 .mdc-list-item__primary-text {

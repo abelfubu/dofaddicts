@@ -4,12 +4,27 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@pages/*": ["src/app/pages/*"],
-      "@chore/*": ["src/app/chore/*"],
-      "@shared/*": ["src/app/shared/*"],
-      "@libs/*": ["src/app/libs/*"],
-      "@environments/*": ["src/environments/*"],
-      "@dh-mygolia": ["dist/dh-mygolia"]
+      "@pages/*": [
+        "src/app/pages/*"
+      ],
+      "@chore/*": [
+        "src/app/chore/*"
+      ],
+      "@shared/*": [
+        "src/app/shared/*"
+      ],
+      "@libs/*": [
+        "src/app/libs/*"
+      ],
+      "@environments/*": [
+        "src/environments/*"
+      ],
+      "@dh-mygolia": [
+        "dist/dh-mygolia"
+      ],
+      "@models/*": [
+        "src/app/libs/models/*"
+      ]
     },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -27,7 +42,10 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": ["ES2022", "dom"]
+    "lib": [
+      "ES2022",
+      "dom"
+    ]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -1,8 +1,9 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { TranslocoModule } from '@ngneat/transloco';
+import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
+import { DialogService } from 'primeng/dynamicdialog';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { filter } from 'rxjs';
 import { ButtonComponent } from 'src/app/shared/ui/button/button.component';
 import { HarvestStore } from '../../../harvest.store';
@@ -14,21 +15,28 @@ import { HEADERS } from './header-data';
   templateUrl: './harvest-table-header.component.html',
   styleUrls: ['./harvest-table-header.component.scss'],
   standalone: true,
-  imports: [CommonModule, ButtonComponent, HarvestStepModalComponent, TranslocoModule],
+  imports: [
+    CommonModule,
+    ButtonComponent,
+    TranslocoModule,
+    MultiSelectModule,
+    HarvestStepModalComponent,
+  ],
 })
 export class HarvestTableHeaderComponent {
   readonly headers = HEADERS;
 
-  private readonly matDialog = inject(MatDialog);
-  private readonly harvestStore = inject(HarvestStore);
-
-  readonly steps$ = this.harvestStore.steps$;
+  private readonly dialog = inject(DialogService);
+  protected readonly harvestStore = inject(HarvestStore);
+  private readonly transloco = inject(TranslocoService);
 
   openFilter<T>(component: ComponentType<T>, steps: boolean[]) {
-    this.matDialog
-      .open(component, { data: steps, panelClass: 'background' })
-      .afterClosed()
-      .pipe(filter(Boolean))
-      .subscribe((data) => this.harvestStore.steps(data));
+    this.dialog
+      .open(component, {
+        data: steps,
+        header: this.transloco.translate('home.steps'),
+      })
+      .onClose.pipe(filter(Boolean))
+      .subscribe((data) => this.harvestStore.filterBySteps(data));
   }
 }

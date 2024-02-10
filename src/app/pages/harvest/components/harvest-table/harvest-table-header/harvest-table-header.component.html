@@ -1,4 +1,4 @@
-<div class="header-container" *ngIf="steps$ | async as steps">
+<div class="header-container" *ngIf="harvestStore.steps$ | async as steps">
   <div *ngFor="let header of headers" class="table-header">
     <ng-container [ngSwitch]="header.type" *transloco="let t">
       <div *ngSwitchCase="'space'"></div>

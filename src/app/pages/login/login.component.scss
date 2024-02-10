@@ -4,6 +4,7 @@
   display: grid;
   min-height: 100vh;
   grid-template-columns: repeat(2, 1fr);
+  color-scheme: light;
 }
 
 .image {
@@ -29,6 +30,7 @@ h1 {
 }
 
 p {
+  margin: 0;
   display: inline;
   text-align: center;
   transform: translateY(2.7rem);
@@ -42,5 +44,5 @@ hr {
 form {
   display: flex;
   flex-direction: column;
-  gap: 1.8rem;
+  gap: 1.5rem;
 }

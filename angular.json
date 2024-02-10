@@ -8,7 +8,9 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss",
-          "standalone": true
+          "standalone": true,
+          "inlineStyle": true,
+          "inlineTemplate": true
         },
         "@schematics/angular:directive": {
           "standalone": true
@@ -41,7 +43,13 @@
                 "output": "/~partytown"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "node_modules/primeng/resources/themes/soho-dark/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeflex/primeflex.css",
+              "src/styles.scss"
+            ],
             "scripts": [],
             "stylePreprocessorOptions": {
               "includePaths": ["src/theme"]
