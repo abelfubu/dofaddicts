@@ -74,6 +74,9 @@ dependencies:
   '@ngrx/component-store':
     specifier: ^16.0.0
     version: 16.3.0(@angular/core@17.1.2)(rxjs@7.8.1)
+  '@ngrx/signals':
+    specifier: ^17.1.0
+    version: 17.1.0(@angular/core@17.1.2)(rxjs@7.8.1)
   '@nguniversal/express-engine':
     specifier: ^16.2.0
     version: 16.2.0(@angular/common@17.1.2)(@angular/core@17.1.2)(express@4.18.2)
@@ -2397,6 +2400,20 @@ packages:
     peerDependencies:
       '@angular/core': ^16.0.0
       rxjs: ^6.5.3 || ^7.5.0
+    dependencies:
+      '@angular/core': 17.1.2(rxjs@7.8.1)(zone.js@0.14.3)
+      rxjs: 7.8.1
+      tslib: 2.6.2
+    dev: false
+
+  /@ngrx/signals@17.1.0(@angular/core@17.1.2)(rxjs@7.8.1):
+    resolution: {integrity: sha512-CF387SNYUoPeFCh13S/vmsyFRZHXm7cZjxuwXbI3AWDS/JXO9GC2061O9f0Fy7DIyQtDisY9uGV5eOiKTYmT0w==}
+    peerDependencies:
+      '@angular/core': ^17.0.0
+      rxjs: ^6.5.3 || ^7.4.0
+    peerDependenciesMeta:
+      rxjs:
+        optional: true
     dependencies:
       '@angular/core': 17.1.2(rxjs@7.8.1)(zone.js@0.14.3)
       rxjs: 7.8.1

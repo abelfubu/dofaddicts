@@ -1,40 +1,49 @@
 <ng-container *ngIf="vm$ | async as vm">
   <header *transloco="let t">
     <nav>
-      <div [routerLink]="['/']" class="logo-container">
+      <div [routerLink]="['/']" class="logo-container mr-3">
         <img class="logo" src="./assets/img/logo.png" alt="Logo" />
         <h3 class="m-0">Dofaddicts</h3>
       </div>
 
+      <!-- HARVEST -->
       <p-button
+        icon="pi pi-home"
+        [label]="t('header.harvest')"
         [text]="true"
         [routerLink]="['/', vm.lang]"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
-        >{{ t("header.harvest") }}</p-button
-      >
+      />
+
+      <!-- EXCHANGE -->
       <p-button
+        icon="pi pi-sort-alt"
         [text]="true"
-        *ngIf="vm.isLoggedIn"
         [routerLink]="['/', vm.lang, 'exchange']"
         routerLinkActive="active"
-        >{{ t("header.exchange") }}</p-button
-      >
+        [label]="t('header.exchange')"
+      />
+
+      @if (vm.isLoggedIn) {
+        <p-button
+          (click)="onLogout()"
+          [text]="true"
+          label="Log Out"
+          icon="pi pi-sign-out"
+        />
+      } @else {
+        <p-button
+          [text]="true"
+          label="Log In"
+          [routerLink]="['/login']"
+          [queryParams]="{ from: 'harvest' }"
+          icon="pi pi-sign-in"
+        />
+      }
     </nav>
-    <nav>
+    <nav class="gap-3">
       <ng-container *ngIf="vm.email">
-        <p-button (click)="onLogout()" [text]="true">
-          <div class="language-flag">
-            <span class="material-symbols-outlined">logout</span>
-            Log Out
-          </div>
-        </p-button>
-        <p-button [text]="true">
-          <div class="language-flag" [routerLink]="['/', vm.lang, 'profile']">
-            <span class="material-symbols-outlined">settings</span>
-            Profile
-          </div>
-        </p-button>
         <img
           class="avatar"
           [title]="vm.email"
@@ -47,23 +56,23 @@
             {{ vm.email.at(0) }}
           </div>
         </ng-template>
-      </ng-container>
 
-      @if (!vm.isLoggedIn) {
+        <!-- PROFILE -->
         <p-button
           [text]="true"
-          [routerLink]="['/login']"
-          [queryParams]="{ from: 'harvest' }"
-          >Log In</p-button
-        >
-      }
+          label="Profile"
+          icon="pi pi-user"
+          [routerLink]="['/', vm.lang, 'profile']"
+        />
+      </ng-container>
+
+      <app-buy-me-coffee />
 
       <app-language-selector
         [currentLang]="selectedLanguage()"
         [languages]="vm.languages"
         (langChange)="onLangChange($event)"
       />
-      <app-buy-me-coffee />
     </nav>
   </header>
   @if (store.loading$ | async) {

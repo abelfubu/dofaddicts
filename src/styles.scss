@@ -28,13 +28,13 @@ body {
 
   ::-moz-selection {
     /* Code for Firefox */
-    color: map-get(c.$dark, 500);
-    background: map-get(c.$primary, 500);
+    color: var(--surface-0);
+    background: var(--primary-500);
   }
 
   ::selection {
-    color: map-get(c.$dark, 500);
-    background: map-get(c.$primary, 500);
+    color: var(--surface-0);
+    background: var(--primary-500);
   }
 
   /* width */
@@ -49,12 +49,12 @@ body {
 
   /* Handle */
   &::-webkit-scrollbar-thumb {
-    background: map-get(c.$primary, 700);
+    background: var(--primary-400);
   }
 
   /* Handle on hover */
   &::-webkit-scrollbar-thumb:hover {
-    background: map-get(c.$primary, 500);
+    background: var(--primary-600);
   }
 }
 
