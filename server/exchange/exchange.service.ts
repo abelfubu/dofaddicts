@@ -1,11 +1,14 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Server, User } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
-import { ExchangeResponse, ExchangeUser } from './models/exchange.response';
+import { ExchangeWithResponse } from './models/exchange-with.response';
+import { ExchangeResponse } from './models/exchange.response';
+import { ExchangeUser } from './models/exchante-user.model';
 
 @Injectable()
 export class ExchangeService {
@@ -19,7 +22,7 @@ export class ExchangeService {
     const server = serverId === 'user' ? user.serverId : serverId;
 
     const serverRequest = this.prisma.server.findMany();
-    const currentUserRequest = this.getCurrentUser(user);
+    const currentUserRequest = this.getCurrentUser(String(user.nickname));
     const dataRequest = this.prisma.user.findMany({
       orderBy: {
         activeAt: 'desc',
@@ -37,6 +40,11 @@ export class ExchangeService {
         discord: true,
         userHarvestId: true,
         serverId: true,
+        server: {
+          select: {
+            name: true,
+          },
+        },
         userProgress: {
           select: {
             missingOrExchangeable: {
@@ -93,6 +101,7 @@ export class ExchangeService {
               nickname: String(user?.nickname),
               userHarvestId: String(user?.userHarvestId),
               serverId: String(user?.serverId),
+              server: String(user?.server?.name),
               missing: { 0: [], 1: [], 2: [] },
               repeated: { 0: [], 1: [], 2: [] },
             },
@@ -115,9 +124,42 @@ export class ExchangeService {
     };
   }
 
-  async getCurrentUser(user: User) {
-    const currentUser = await this.prisma.user.findUniqueOrThrow({
-      where: { id: user.id },
+  async with(user: User, username: string): Promise<ExchangeWithResponse> {
+    const [currentUser, targetUser, totalHarvest] = await Promise.all([
+      this.getCurrentUser(String(user.nickname)),
+      this.getCurrentUser(username),
+      this.prisma.harvest.findMany(),
+    ]);
+
+    currentUser.repeated = currentUser.repeated?.filter((id) =>
+      targetUser.missing?.includes(id),
+    );
+
+    targetUser.repeated = targetUser.repeated?.filter((id) =>
+      currentUser.missing?.includes(id),
+    );
+
+    return {
+      currentUser: {
+        ...currentUser,
+        missing: [],
+        repeated: totalHarvest.filter((item) =>
+          currentUser.repeated?.includes(item.id),
+        ),
+      },
+      targetUser: {
+        ...targetUser,
+        missing: [],
+        repeated: totalHarvest.filter((item) =>
+          targetUser.repeated?.includes(item.id),
+        ),
+      },
+    };
+  }
+
+  private async getCurrentUser(username: string) {
+    const currentUser = await this.prisma.user.findFirst({
+      where: { nickname: { equals: username, mode: 'insensitive' } },
       select: {
         id: true,
         picture: true,
@@ -125,6 +167,11 @@ export class ExchangeService {
         discord: true,
         userHarvestId: true,
         serverId: true,
+        server: {
+          select: {
+            name: true,
+          },
+        },
         userProgress: {
           select: {
             missingOrExchangeable: {
@@ -144,13 +191,15 @@ export class ExchangeService {
       },
     });
 
-    if (!currentUser) throw new BadRequestException();
+    if (!currentUser) throw new NotFoundException();
 
     return {
       id: String(currentUser.id),
       picture: String(currentUser.picture),
       nickname: String(currentUser.nickname),
       discord: String(currentUser.discord),
+      serverId: String(currentUser.serverId),
+      server: String(currentUser.server?.name),
       userHarvestId: currentUser.userHarvestId,
       ...currentUser.userProgress?.missingOrExchangeable.reduce<{
         missing: string[];

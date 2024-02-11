@@ -18,5 +18,23 @@ export const exchangePath: Route = {
     },
   ],
   loadComponent: () =>
-    import('@pages/exchange/exchange.component').then((c) => c.ExchangeComponent),
+    import('@pages/exchange/exchange.component').then(
+      (c) => c.ExchangeComponent,
+    ),
+  children: [
+    {
+      path: '',
+      loadComponent: () =>
+        import(
+          '@pages/exchange/components/exchange-list/exchange-list.component'
+        ).then((c) => c.ExchangeListComponent),
+    },
+    {
+      path: ':nickname',
+      loadComponent: () =>
+        import(
+          '@pages/exchange/components/exchange-detail/exchange-detail.component'
+        ).then((c) => c.ExchangeDetailComponent),
+    },
+  ],
 };

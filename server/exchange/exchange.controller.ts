@@ -8,6 +8,12 @@ import { ExchangeService } from './exchange.service';
 export class ExchangeController {
   constructor(private readonly service: ExchangeService) {}
 
+  @Get('with/:username')
+  @UseGuards(JwtAuthGuard)
+  with(@GetUser() user: User, @Param('username') username: string) {
+    return this.service.with(user, username);
+  }
+
   @Get(':serverId')
   @UseGuards(JwtAuthGuard)
   get(@GetUser() user: User, @Param('serverId') serverId: string) {

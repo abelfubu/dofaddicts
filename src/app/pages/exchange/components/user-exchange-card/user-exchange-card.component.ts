@@ -5,18 +5,20 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { TranslocoDirective, TranslocoService } from '@ngneat/transloco';
 import { TooltipModule } from 'primeng/tooltip';
 import { from } from 'rxjs';
-import { ExchangeStore } from '../exchange.store';
-import { ExchangeUser } from '../models/exchange.response';
-import { UserExchangeItemComponent } from './user-exchange-item/user-exchange-item.component';
+import { ExchangeStore } from '../../exchange.store';
+import { ExchangeUser } from '../../models/exchange.response';
+import { ExchangeUserInfoComponent } from '../exchange-user-info/exchange-user-info.component';
+import { UserExchangeItemComponent } from '../user-exchange-item/user-exchange-item.component';
 
 @Component({
   selector: 'app-user-exchange-card',
   standalone: true,
   imports: [
     RouterLink,
+    TooltipModule,
     TranslocoDirective,
     UserExchangeItemComponent,
-    TooltipModule,
+    ExchangeUserInfoComponent,
   ],
   encapsulation: ViewEncapsulation.None,
   template: `
@@ -26,25 +28,12 @@ import { UserExchangeItemComponent } from './user-exchange-item/user-exchange-it
         [routerLink]="[
           '/',
           transloco.getActiveLang(),
-          'share',
+          'exchange',
           user().nickname
         ]"
       >
-        <div class="flex justify-content-between align-items-center">
-          <h2
-            pTooltip="/w {{ user().nickname }}"
-            tooltipStyleClass="tooltip"
-            class="m-0 text-white cursor-pointer hover:text-primary-600 inline"
-            (click)="copyToClipboard(); $event.stopPropagation()"
-          >
-            {{ user().nickname }}
-          </h2>
-          <small class="text-primary-400 text-bold">{{
-            store.servers()[user().serverId].name
-          }}</small>
-        </div>
-        <small class="block">Discord</small>
-        <p class="m-0 text-primary-400">{{ user().discord || '-' }}</p>
+        <app-exchange-user-info [user]="user()" />
+
         <div class="grid mt-3">
           <app-user-exchange-item
             class="col"

@@ -6,3 +6,7 @@
 ###
 GET {{url}}/{{serverId}}
 Authorization: Bearer {{token}}
+
+###
+GET {{url}}/with/natsu-me 
+Authorization: Bearer {{token}}

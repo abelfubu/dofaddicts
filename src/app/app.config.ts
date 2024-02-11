@@ -11,7 +11,7 @@ import {
   isDevMode,
 } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { TranslocoService, provideTransloco } from '@ngneat/transloco';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -39,7 +39,7 @@ export const config: ApplicationConfig = {
       withInterceptors([authInterceptor, loadingInterceptor]),
       withFetch(),
     ),
-    provideRouter(appRoutes),
+    provideRouter(appRoutes, withComponentInputBinding()),
     provideAnimations(),
     provideTransloco({
       config: {

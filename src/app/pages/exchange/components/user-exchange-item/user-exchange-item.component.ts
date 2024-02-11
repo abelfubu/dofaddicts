@@ -12,7 +12,7 @@ import { TranslocoDirective, TranslocoService } from '@ngneat/transloco';
       <small class="text-center py-1 block">{{ t(monsterLabel()) }}</small>
       <div
         class="border-1 border-primary-500 border-circle square flex justify-content-center align-items-center bg-primary-700 m-2 hover:bg-primary-600 transition-colors transition-duration-100"
-        [routerLink]="['/', transloco.getActiveLang(), 'share', nickname()]"
+        [routerLink]="['/', transloco.getActiveLang(), 'exchange', nickname()]"
         [queryParams]="{ selection: monsterType() }"
       >
         <h3 class="p-1 m-0 text-gray-900 text-3xl">{{ amount() }}</h3>
