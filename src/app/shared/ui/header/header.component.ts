@@ -92,6 +92,7 @@ export class HeaderComponent {
   protected readonly store = inject(GlobalStore);
   private readonly cookieService = inject(CookieService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   selectedLanguage = signal<string>(this.translate.getActiveLang());
   languageSelectorVisible = signal(false);
@@ -100,7 +101,11 @@ export class HeaderComponent {
     this.languageSelectorVisible.set(false);
     this.cookieService.set(environment.favLangKey, lang);
     this.selectedLanguage.set(lang);
-    this.router.navigate([`/${lang}`]);
+    this.router.navigate([
+      '/',
+      lang,
+      ...this.route.snapshot.url.map((u) => u.path),
+    ]);
   }
 
   onLogout(): void {

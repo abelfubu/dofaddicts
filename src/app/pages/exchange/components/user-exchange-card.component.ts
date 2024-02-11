@@ -1,11 +1,11 @@
-import { NgOptimizedImage } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { Component, ViewEncapsulation, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HarvestItemType } from '@models/harvest-item-type.enum';
 import { HotToastService } from '@ngneat/hot-toast';
-import { TranslocoDirective } from '@ngneat/transloco';
+import { TranslocoDirective, TranslocoService } from '@ngneat/transloco';
+import { TooltipModule } from 'primeng/tooltip';
 import { from } from 'rxjs';
-import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { ExchangeStore } from '../exchange.store';
 import { ExchangeUser } from '../models/exchange.response';
 import { UserExchangeItemComponent } from './user-exchange-item/user-exchange-item.component';
 
@@ -14,148 +14,106 @@ import { UserExchangeItemComponent } from './user-exchange-item/user-exchange-it
   standalone: true,
   imports: [
     RouterLink,
-    NgOptimizedImage,
-    ButtonComponent,
     TranslocoDirective,
     UserExchangeItemComponent,
+    TooltipModule,
   ],
+  encapsulation: ViewEncapsulation.None,
   template: `
-    <div class="card" *transloco="let t">
-      <div class="cell">
-        <div class="title">
-          <small>{{ t('exchange.name') }}</small>
-          <h3 class="m-0">{{ user.nickname }}</h3>
+    <ng-container *transloco="let t; read: 'exchange'">
+      <div
+        class="border-1 border-round border-primary-900 p-3 cursor-pointer hover:bg-primary-900 transition-color transition-duration-100"
+        [routerLink]="[
+          '/',
+          transloco.getActiveLang(),
+          'share',
+          user().nickname
+        ]"
+      >
+        <div class="flex justify-content-between align-items-center">
+          <h2
+            pTooltip="/w {{ user().nickname }}"
+            tooltipStyleClass="tooltip"
+            class="m-0 text-white cursor-pointer hover:text-primary-600 inline"
+            (click)="copyToClipboard(); $event.stopPropagation()"
+          >
+            {{ user().nickname }}
+          </h2>
+          <small class="text-primary-400 text-bold">{{
+            store.servers()[user().serverId].name
+          }}</small>
         </div>
-        <app-button (click)="$event.stopPropagation(); copyToClipboard()"
-          ><span class="material-symbols-outlined">
-            content_copy
-          </span></app-button
-        >
-      </div>
-      <div class="cell">
-        <div class="title">
-          <small>Discord ID</small>
-          <h3 class="m-0">{{ user.discord || '-' }}</h3>
+        <small class="block">Discord</small>
+        <p class="m-0 text-primary-400">{{ user().discord || '-' }}</p>
+        <div class="grid mt-3">
+          <app-user-exchange-item
+            class="col"
+            [amount]="user().repeated[HarvestItemType.Monster].length"
+            [type]="HarvestItemType.Monster"
+            [nickname]="user().nickname"
+          />
+          <app-user-exchange-item
+            class="col"
+            [amount]="user().repeated[HarvestItemType.Boss].length"
+            [type]="HarvestItemType.Boss"
+            [nickname]="user().nickname"
+          />
+          <app-user-exchange-item
+            class="col"
+            [amount]="user().repeated[HarvestItemType.Archi].length"
+            [type]="HarvestItemType.Archi"
+            [nickname]="user().nickname"
+          />
+        </div>
+        <!-- <h3 class="block text-center mt-0">{{ user().nickname }}</h3> -->
+        <i
+          class="pi pi-sort-alt text-center text-white text-3xl block mt-3"
+        ></i>
+        <h3 class="block text-center mb-0">{{ userName() }}</h3>
+        <div class="grid">
+          <app-user-exchange-item
+            class="col"
+            [amount]="user().missing[HarvestItemType.Monster].length"
+            [type]="HarvestItemType.Monster"
+            [nickname]="user().nickname"
+          />
+          <app-user-exchange-item
+            class="col"
+            [amount]="user().missing[HarvestItemType.Boss].length"
+            [type]="HarvestItemType.Boss"
+            [nickname]="user().nickname"
+          />
+          <app-user-exchange-item
+            class="col"
+            [amount]="user().missing[HarvestItemType.Archi].length"
+            [type]="HarvestItemType.Archi"
+            [nickname]="user().nickname"
+          />
         </div>
       </div>
-
-      <h3 class="m-0">
-        {{ t('exchange.youCanGive', { name: user.nickname }) }}
-      </h3>
-      <div class="harvest-info">
-        <app-user-exchange-item
-          [amount]="user.missing[HarvestItemType.Monster].length"
-          [type]="HarvestItemType.Monster"
-        />
-
-        <app-user-exchange-item
-          [amount]="user.missing[HarvestItemType.Boss].length"
-          [type]="HarvestItemType.Boss"
-        />
-
-        <app-user-exchange-item
-          [amount]="user.missing[HarvestItemType.Archi].length"
-          [type]="HarvestItemType.Archi"
-        />
-      </div>
-
-      <h3 class="m-0">
-        {{ t('exchange.heCanGive', { name: user.nickname }) }}
-      </h3>
-      <div class="harvest-info">
-        <app-user-exchange-item
-          [amount]="user.repeated[HarvestItemType.Monster].length"
-          [type]="HarvestItemType.Monster"
-        />
-
-        <app-user-exchange-item
-          [amount]="user.repeated[HarvestItemType.Boss].length"
-          [type]="HarvestItemType.Boss"
-        />
-
-        <app-user-exchange-item
-          [amount]="user.repeated[HarvestItemType.Archi].length"
-          [type]="HarvestItemType.Archi"
-        />
-      </div>
-    </div>
+    </ng-container>
   `,
-  styles: [
-    `
-      @use 'colors' as c;
-
-      $primary: map-get(
-        $map: c.$dark,
-        $key: 300,
-      );
-
-      .card {
-        box-shadow: 0 0 0 1px $primary;
-        border-radius: 0.4rem;
-        padding: 1rem 1rem 0;
-        margin: 0 0 1rem;
-        transition: box-shadow 0.2s ease-in-out;
-
-        &:hover {
-          box-shadow: 0 0 0 2px $primary;
-        }
-      }
-
-      .harvest-info {
-        display: grid;
-        gap: 0.5rem;
-        grid-template-columns: repeat(3, 1fr);
-        padding: 1rem 0;
-      }
-
-      .amount {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 0.5rem;
-        border-radius: 0.4rem;
-        width: 10rem;
-        cursor: pointer;
-
-        h3 {
-          font-size: 2rem;
-        }
-      }
-
-      .purple {
-        background-color: rgba(map-get(c.$primary, 800), 0.4);
-      }
-
-      .blue {
-        background-color: rgba(c.$medium-blue, 0.4);
-      }
-
-      .yellow {
-        background-color: rgba(map-get(c.$primary, 600), 0.4);
-      }
-
-      .cell {
-        padding-bottom: 1rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      app-button {
-        justify-self: end;
-      }
-    `,
-  ],
+  styles: `
+    .p-tooltip .p-tooltip-text {
+      background: var(--surface-50);
+      color: var(--primary-200);
+    }
+  `,
 })
 export class UserExchangeCardComponent {
-  @Input({ required: true }) user!: ExchangeUser;
+  user = input.required<ExchangeUser>();
+  userName = input.required<string>();
 
   private readonly toast = inject(HotToastService);
   protected readonly HarvestItemType = HarvestItemType;
+  protected readonly store = inject(ExchangeStore);
+  protected readonly transloco = inject(TranslocoService);
 
   copyToClipboard(): void {
-    from(navigator.clipboard.writeText(`/w ${this.user.nickname} `))
+    from(navigator.clipboard.writeText(`/w ${this.user().nickname} `))
       .pipe(
+        // 11/02/2024
+        // TODO: translate this
         this.toast.observe({
           loading: 'Copiando url en el portapapeles',
           success: 'Comando copiado en el portapapeles',

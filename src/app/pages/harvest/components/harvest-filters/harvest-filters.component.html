@@ -70,11 +70,11 @@
       <div class="card flex justify-content-center">
         <p-selectButton
           [options]="[
-            { name: 'Mostrar Capturados', value: 'showCaptured' },
-            { name: 'Mostrar repetidos', value: 'showRepeatedOnly' },
-            { name: 'Monsters', value: 'monsters' },
-            { name: 'Bosses', value: 'bosses' },
-            { name: 'Archis', value: 'archis' }
+            { name: t('home.captured'), value: 'showCaptured' },
+            { name: t('home.repeated'), value: 'showRepeatedOnly' },
+            { name: t('home.monsters'), value: 'monsters' },
+            { name: t('home.bosses'), value: 'bosses' },
+            { name: t('home.archis'), value: 'archis' }
           ]"
           [formControl]="filters"
           [multiple]="true"

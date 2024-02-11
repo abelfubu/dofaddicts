@@ -11,7 +11,7 @@ export class ExchangeDataService {
   private readonly URL = environment.apiUrl;
   private readonly http = inject(HttpClient);
 
-  get(): Observable<ExchangeResponse> {
-    return this.http.get<ExchangeResponse>(`${this.URL}/exchange`);
+  get(server: string): Observable<ExchangeResponse> {
+    return this.http.get<ExchangeResponse>(`${this.URL}/exchange/${server}`);
   }
 }

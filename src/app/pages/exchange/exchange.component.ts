@@ -1,8 +1,12 @@
 import { NgForOf, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
-import { ButtonComponent } from '../../shared/ui/button/button.component';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { GlobalStore } from '../../shared/store/global.store';
 import { HeaderComponent } from '../../shared/ui/header/header.component';
 import { UserExchangeCardComponent } from './components/user-exchange-card.component';
 import { ExchangeStore } from './exchange.store';
@@ -14,26 +18,45 @@ import { ExchangeStore } from './exchange.store';
     NgIf,
     NgForOf,
     RouterLink,
+    FormsModule,
+    ButtonModule,
+    DropdownModule,
     HeaderComponent,
+    InputTextModule,
     TranslocoModule,
-    ButtonComponent,
     UserExchangeCardComponent,
   ],
-  providers: [ExchangeStore],
   template: `
     <ng-container *transloco="let t">
       <app-header />
 
-      <ng-container *ngIf="!store.vm()?.error; else error">
-        <h1 *ngIf="store.vm()?.users?.length">
-          <!-- {{ t('exchange.title', { server: vm()?.users?.at(0)?.server }) }} -->
-        </h1>
+      <div class="flex justify-content-center pb-5 pt-3 gap-2">
+        <input
+          #input
+          type="text"
+          pInputText
+          (input)="store.search(input.value)"
+          [placeholder]="t('home.search')"
+          style="flex-basis: 500px"
+        />
 
+        <p-dropdown
+          [options]="store.serverOptions()"
+          [ngModel]="store.currentServer()"
+          (onChange)="store.getUsers($event.value)"
+          optionValue="id"
+          optionLabel="name"
+        />
+      </div>
+
+      <ng-container *ngIf="!store.error(); else error">
         <div class="card-container">
-          <app-user-exchange-card
-            *ngFor="let user of store.vm()?.users"
-            [user]="user"
-          />
+          @for (user of store.users(); track user.nickname) {
+            <app-user-exchange-card
+              [user]="user"
+              [userName]="global.user()?.nickname || ''"
+            />
+          }
         </div>
       </ng-container>
 
@@ -42,11 +65,12 @@ import { ExchangeStore } from './exchange.store';
           <h1>{{ t('exchange.error.title') }}</h1>
           <p>{{ t('exchange.error.message') }}</p>
           <div class="actions">
-            <app-button
+            <p-button
+              [outlined]="true"
               [routerLink]="['/', translate.getActiveLang(), 'profile']"
-              >{{ t('exchange.error.button') }}</app-button
-            >
-            <app-button>{{ t('exchange.error.back') }}</app-button>
+              [label]="t('exchange.error.button')"
+            />
+            <p-button [outlined]="true" [label]="t('exchange.error.back')" />
           </div>
         </div>
       </ng-template>
@@ -90,9 +114,10 @@ import { ExchangeStore } from './exchange.store';
 })
 export class ExchangeComponent {
   protected readonly store = inject(ExchangeStore);
+  protected readonly global = inject(GlobalStore);
   protected readonly translate = inject(TranslocoService);
 
   ngOnInit(): void {
-    this.store.getUsers();
+    this.store.getUsers('user');
   }
 }

@@ -47,6 +47,7 @@ export class GlobalStore extends ComponentStore<GlobalState> {
     ...user,
     isLoggedIn,
   }));
+  readonly user = this.selectSignal(({ user }) => user);
 
   readonly login = this.effect<Credentials>((trigger$) =>
     trigger$.pipe(

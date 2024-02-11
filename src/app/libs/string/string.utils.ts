@@ -5,4 +5,14 @@ export class StringUtils {
       .replace(/\p{Diacritic}/gu, '')
       .toLowerCase();
   }
+
+  static filterList<T>(
+    list: T[],
+    filter: string,
+    callback: (item: T) => string,
+  ): T[] {
+    return list.filter((item) =>
+      this.normalize(callback(item)).includes(this.normalize(filter)),
+    );
+  }
 }

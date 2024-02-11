@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { GetUser } from '../auth/get-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -8,9 +8,9 @@ import { ExchangeService } from './exchange.service';
 export class ExchangeController {
   constructor(private readonly service: ExchangeService) {}
 
-  @Get()
+  @Get(':serverId')
   @UseGuards(JwtAuthGuard)
-  get(@GetUser() user: User) {
-    return this.service.get(user);
+  get(@GetUser() user: User, @Param('serverId') serverId: string) {
+    return this.service.get(user, serverId);
   }
 }

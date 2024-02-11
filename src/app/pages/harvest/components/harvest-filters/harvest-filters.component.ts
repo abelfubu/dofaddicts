@@ -53,6 +53,7 @@ interface HarvestFiltersVM {
   styleUrls: ['./harvest-filters.component.scss'],
   standalone: true,
   imports: [
+    FormsModule,
     ButtonModule,
     CommonModule,
     ChartComponent,
@@ -60,7 +61,6 @@ interface HarvestFiltersVM {
     CheckboxModule,
     InputTextModule,
     TranslocoDirective,
-    FormsModule,
     RouterLinkWithHref,
     SelectButtonModule,
     ReactiveFormsModule,

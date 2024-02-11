@@ -1,6 +1,8 @@
 @url = http://localhost:4200/api/exchange
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiZWxmdWJ1QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMQmxfSzJ6ajJueWtsbmp5Z0NKSmJ1V09yeXpvQkltTWg5Nm5ETVF2bjA5TXc9czk2LWMiLCJwcm92aWRlciI6Imdvb2dsZSIsIm5pY2tuYW1lIjoiWmF6aGVtIiwiaWF0IjoxNzA3MDc0NDQ0LCJleHAiOjE3Mzg2MzIwNDR9.S42LQwuLJpo_PXqbaXYdF5vf36r8-edeMiZAjkWOzjg
+@serverId = 6466378caef437caf6a18703
+
 
 ###
-GET {{url}}
+GET {{url}}/{{serverId}}
 Authorization: Bearer {{token}}

@@ -1,7 +1,7 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HarvestItemType } from '@models/harvest-item-type.enum';
-import { TranslocoDirective } from '@ngneat/transloco';
+import { TranslocoDirective, TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-user-exchange-item',
@@ -9,35 +9,43 @@ import { TranslocoDirective } from '@ngneat/transloco';
   imports: [RouterLink, TranslocoDirective],
   template: `
     <ng-container *transloco="let t">
-      <div class="cell" [class]="color()">
-        <div class="title">
-          <small>{{ t(monsterType()) }}</small>
-        </div>
-        <h3 class="m-2">{{ amount() }}</h3>
+      <small class="text-center py-1 block">{{ t(monsterLabel()) }}</small>
+      <div
+        class="border-1 border-primary-500 border-circle square flex justify-content-center align-items-center bg-primary-700 m-2 hover:bg-primary-600 transition-colors transition-duration-100"
+        [routerLink]="['/', transloco.getActiveLang(), 'share', nickname()]"
+        [queryParams]="{ selection: monsterType() }"
+      >
+        <h3 class="p-1 m-0 text-gray-900 text-3xl">{{ amount() }}</h3>
       </div>
     </ng-container>
   `,
-  styleUrl: './user-exchange-item.component.scss',
+  styles: `
+    .square {
+      aspect-ratio: 4/4;
+    }
+  `,
 })
 export class UserExchangeItemComponent {
   type = input.required<HarvestItemType>();
   amount = input.required<number>();
+  nickname = input.required<string>();
 
-  typeMap = {
+  protected readonly transloco = inject(TranslocoService);
+
+  labelMap = {
     [HarvestItemType.Monster]: 'home.monsters',
     [HarvestItemType.Boss]: 'home.bosses',
     [HarvestItemType.Archi]: 'home.archis',
     [HarvestItemType.Total]: '-',
   };
 
-  monsterType = computed(() => this.typeMap[this.type()]);
-
-  colorMap = {
-    [HarvestItemType.Monster]: 'purple',
-    [HarvestItemType.Boss]: 'blue',
-    [HarvestItemType.Archi]: 'yellow',
-    [HarvestItemType.Total]: 'white',
+  typeMap = {
+    [HarvestItemType.Monster]: 'monsters',
+    [HarvestItemType.Boss]: 'bosses',
+    [HarvestItemType.Archi]: 'archis',
+    [HarvestItemType.Total]: 'total',
   };
 
-  color = computed(() => this.colorMap[this.type()]);
+  monsterLabel = computed(() => this.labelMap[this.type()]);
+  monsterType = computed(() => this.typeMap[this.type()]);
 }
