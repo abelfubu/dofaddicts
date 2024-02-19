@@ -38,7 +38,9 @@ import { InputTextModule } from 'primeng/inputtext';
         formControlName="serverId"
       />
       <div class="actions">
-        <p-button [disabled]="form.invalid">{{ t('profile.submit') }}</p-button>
+        <p-button type="submit" [disabled]="form.invalid">{{
+          t('profile.submit')
+        }}</p-button>
         <p-button [routerLink]="['/']">{{ t('profile.back') }}</p-button>
       </div>
     </form>
